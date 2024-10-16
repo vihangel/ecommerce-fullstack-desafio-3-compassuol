@@ -12,39 +12,30 @@ export class Product {
   @Column({ length: 10 })
   sku: string;
 
-  @Column()
-  category_id: number;
-
   @ManyToOne(() => Category, (category) => category.products)
   category: Category;
 
-  @Column({ length: 250 })
+  @Column({ length: 500, default: 'No description available' })
   description: string;
-
-  @Column({ length: 500 })
-  large_description: string;
 
   @Column('decimal')
   price: number;
 
-  @Column('decimal', { nullable: true })
-  discount_price: number;
-
   @Column('int', { nullable: true })
   discount_percent: number;
 
-  @Column('boolean')
+  @Column('boolean', { default: true })
   is_new: boolean;
 
-  @Column({ length: 250 })
-  image_link: string;
+  @Column('bytea', { nullable: true }) // Campo para armazenar a imagem em binário (usando bytea no PostgreSQL)
+  image_data: Buffer;
 
-  @Column({ length: 1000 })
-  other_images_link: string;
-
-  @Column('timestamp')
+  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
   created_date: Date;
 
-  @Column('timestamp')
+  @Column('timestamp', {
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
   updated_date: Date;
 }
