@@ -12,6 +12,7 @@ const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
 const auth_module_1 = require("./auth/auth.module");
 const user_module_1 = require("./auth/user/user.module");
+const category_module_1 = require("./category/category.module");
 const category_model_1 = require("./models/category.model");
 const newsletter_model_1 = require("./models/newsletter.model");
 const product_model_1 = require("./models/product.model");
@@ -45,6 +46,7 @@ exports.AppModule = AppModule = __decorate([
             user_module_1.UserModule,
             product_module_1.ProductModule,
             newsletter_module_1.NewsletterModule,
+            category_module_1.CategoryModule,
         ],
     })
 ], AppModule);

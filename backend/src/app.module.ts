@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './auth/user/user.module';
+import { CategoryModule } from './category/category.module';
 import { Category } from './models/category.model';
 import { NewsletterLog } from './models/newsletter.model';
 import { Product } from './models/product.model';
@@ -33,6 +34,7 @@ import { ProductModule } from './product/product.module';
     UserModule,
     ProductModule,
     NewsletterModule,
+    CategoryModule,
   ],
 })
 export class AppModule {}

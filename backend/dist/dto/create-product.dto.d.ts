@@ -8,5 +8,5 @@ export declare class CreateProductDto {
     discount_price?: number;
     discount_percent?: number;
     is_new: boolean;
-    image_data?: Buffer;
+    image_data?: string;
 }

@@ -5,8 +5,12 @@ export declare class ProductController {
     constructor(productService: ProductService);
     findAll(): Promise<import("../models/product.model").Product[]>;
     findOne(id: number): Promise<import("../models/product.model").Product>;
-    findWithFilters(name?: string, category?: string, minPrice?: number, maxPrice?: number): Promise<import("../models/product.model").Product[]>;
-    create(productData: CreateProductDto): Promise<any>;
-    update(id: number, updateData: Partial<CreateProductDto>): Promise<any>;
-    remove(id: number): Promise<any>;
+    create(productData: CreateProductDto, image: Express.Multer.File): Promise<import("../models/product.model").Product>;
+    update(id: number, updateData: Partial<CreateProductDto>): Promise<import("../models/product.model").Product>;
+    remove(id: number): Promise<{
+        message: string;
+    }>;
+    removeAll(): Promise<{
+        message: string;
+    }>;
 }

@@ -1,5 +1,5 @@
-// src/pages/HomePage.tsx
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import HeroImage from '../../assets/images/hero.png';
 import Container from '../../components/shared/Container';
@@ -9,6 +9,37 @@ import CategorySection from './components/CategorySection';
 import FeatureSection from './components/FeatureSection';
 
 const HomePage: React.FC = () => {
+
+  const useMockData = false;
+
+  const [products, setProducts] = useState(mockProducts); 
+  const [loading, setLoading] = useState<boolean>(!useMockData); 
+
+  useEffect(() => {
+    if (!useMockData) {
+      setLoading(true);
+      axios
+        .get('http://localhost:3000/products?limit=8')
+        .then((response) => {
+      
+            setProducts(response.data);
+          
+        })
+        .catch((error) => {
+          console.error('Erro ao buscar produtos:', error);
+          setProducts(mockProducts); 
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [useMockData]);
+  
+
+  if (loading) {
+    return <p>Carregando produtos...</p>; 
+  }
+
   return (
     <Main>
       <HeroSection>
@@ -17,25 +48,24 @@ const HomePage: React.FC = () => {
         </HeroImageWrapper>
         <Container>
           <HeroContent>
-          <h2>Transforme sua casa!</h2>
-<p>
-  Descubra móveis e decorações que combinam com seu estilo e trazem conforto
-  e elegância ao seu lar. Dê vida aos seus espaços e crie memórias inesquecíveis.
-</p>
-
+            <h2>Transforme sua casa!</h2>
+            <p>
+              Descubra móveis e decorações que combinam com seu estilo e trazem conforto
+              e elegância ao seu lar. Dê vida aos seus espaços e crie memórias inesquecíveis.
+            </p>
           </HeroContent>
         </Container>
       </HeroSection>
-      <CategorySection></CategorySection>
-      <ProductSection title="Our Products" products={mockProducts} />
-      <FeatureSection></FeatureSection>
+      <CategorySection />
+      <ProductSection title="Our Products" products={products} />
+      <FeatureSection />
     </Main>
   );
 };
 
 export default HomePage;
 
-
+// Styled Components
 const Main = styled.main`
   padding-top: 100px; /* Para garantir que o conteúdo não fique atrás da AppBar */
 `;
@@ -45,8 +75,8 @@ const HeroSection = styled.section`
   width: 100%;
   height: 500px;
   overflow: hidden;
-display: flex;
-    align-items: end;
+  display: flex;
+  align-items: end;
 
   @media (max-width: 768px) {
     height: 350px;
@@ -71,9 +101,9 @@ const HeroContent = styled.div`
   position: relative;
   width: 50%;
   max-width: 512px;
- margin: 0 0 0 auto;
+  margin: 0 0 0 auto;
   padding: 1rem;
-  background: #FFF3E3;
+  background: #fff3e3;
   opacity: 0.9;
   text-align: left;
 
@@ -106,64 +136,64 @@ const mockProducts = [
   {
     id: 1,
     image: HeroImage,
-    title: "Syltherine",
-    description: "Stylish cafe chair",
-    price: "2.500.000",
-    oldPrice: "3.500.000",
+    title: 'Mock Syltherine',
+    description: 'Stylish cafe chair',
+    price: '2.500.000',
+    oldPrice: '3.500.000',
     discount: 30,
   },
   {
     id: 2,
     image: HeroImage,
-    title: "Leviosa",
-    description: "Luxury big sofa",
-    price: "7.000.000",
-    oldPrice: "14.000.000",
+    title: 'Leviosa',
+    description: 'Luxury big sofa',
+    price: '7.000.000',
+    oldPrice: '14.000.000',
     discount: 50,
   },
   {
     id: 3,
     image: HeroImage,
-    title: "Lolito",
-    description: "Outdoor bar table and stool",
-    price: "500.000",
+    title: 'Lolito',
+    description: 'Outdoor bar table and stool',
+    price: '500.000',
   },
   {
     id: 4,
     image: HeroImage,
-    title: "Respira",
-    description: "Night lamp",
-    price: "1.500.000",
+    title: 'Respira',
+    description: 'Night lamp',
+    price: '1.500.000',
   },
   {
     id: 5,
     image: HeroImage,
-    title: "Muggo",
-    description: "Small mug",
-    price: "150.000",
+    title: 'Muggo',
+    description: 'Small mug',
+    price: '150.000',
     isNew: true,
   },
   {
     id: 6,
     image: HeroImage,
-    title: "Pingky",
-    description: "Cute bed set",
-    price: "7.000.000",
-    oldPrice: "14.000.000",
+    title: 'Pingky',
+    description: 'Cute bed set',
+    price: '7.000.000',
+    oldPrice: '14.000.000',
     discount: 50,
   },
   {
     id: 7,
     image: HeroImage,
-    title: "Potty",
-    description: "Minimalist flower pot",
-    price: "500.000",
+    title: 'Potty',
+    description: 'Minimalist flower pot',
+    price: '500.000',
   },
   {
     id: 8,
     image: HeroImage,
-    title: "Grifo",
-    description: "Stylish lamp",
-    price: "1.500.000",
+    title: 'Grifo',
+    description: 'Stylish lamp',
+    price: '1.500.000',
   },
 ];

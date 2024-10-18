@@ -1,0 +1,44 @@
+[
+    {
+        "name": "Syltherine",
+        "sku": "S002",
+        "category_id": 1,
+        "description": "Stylish cafe chair",
+        "large_description": "Comfortable and elegant, perfect for cafes.",
+        "price": 2500000,
+        "discount_price": 2000000,
+        "discount_percent": 20,
+        "is_new": false
+    },
+    {
+        "name": "Leviosa",
+        "sku": "S003",
+        "category_id": 1,
+        "description": "Luxury big sofa",
+        "large_description": "Perfect for the entire family with premium comfort.",
+        "price": 7000000,
+        "discount_price": 6000000,
+        "discount_percent": 15,
+        "is_new": false
+    },
+    {
+        "name": "Lolito",
+        "sku": "S004",
+        "category_id": 2,
+        "description": "Outdoor bar table and stool",
+        "large_description": "Durable and stylish for outdoor gatherings.",
+        "price": 500000,
+        "discount_price": 450000,
+        "discount_percent": 10,
+        "is_new": false
+    },
+    {
+        "name": "Muggo",
+        "sku": "S005",
+        "category_id": 3,
+        "description": "Small mug",
+        "large_description": "Perfect for coffee or tea, with a minimalist design.",
+        "price": 150000,
+        "is_new": true
+    }
+]
