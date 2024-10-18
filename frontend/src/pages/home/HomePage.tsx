@@ -1,9 +1,11 @@
 // src/pages/HomePage.tsx
 import React from 'react';
 import styled from 'styled-components';
-import HeroImage from '../assets/images/hero.png';
-import Container from '../components/shared/Container';
-import { theme } from '../styles/theme';
+import HeroImage from '../../assets/images/hero.png';
+import Container from '../../components/shared/Container';
+import { theme } from '../../styles/theme';
+import ProductSection from '../home/components/ProductSection';
+import CategorySection from './components/CategorySection';
 
 const HomePage: React.FC = () => {
   return (
@@ -23,6 +25,8 @@ const HomePage: React.FC = () => {
           </HeroContent>
         </Container>
       </HeroSection>
+      <CategorySection></CategorySection>
+      <ProductSection title="Our Products" products={mockProducts} />
     </Main>
   );
 };
@@ -94,3 +98,70 @@ const HeroContent = styled.div`
     }
   }
 `;
+
+// Mock Data
+const mockProducts = [
+  {
+    id: 1,
+    image: HeroImage,
+    title: "Syltherine",
+    description: "Stylish cafe chair",
+    price: "2.500.000",
+    oldPrice: "3.500.000",
+    discount: 30,
+  },
+  {
+    id: 2,
+    image: HeroImage,
+    title: "Leviosa",
+    description: "Luxury big sofa",
+    price: "7.000.000",
+    oldPrice: "14.000.000",
+    discount: 50,
+  },
+  {
+    id: 3,
+    image: HeroImage,
+    title: "Lolito",
+    description: "Outdoor bar table and stool",
+    price: "500.000",
+  },
+  {
+    id: 4,
+    image: HeroImage,
+    title: "Respira",
+    description: "Night lamp",
+    price: "1.500.000",
+  },
+  {
+    id: 5,
+    image: HeroImage,
+    title: "Muggo",
+    description: "Small mug",
+    price: "150.000",
+    isNew: true,
+  },
+  {
+    id: 6,
+    image: HeroImage,
+    title: "Pingky",
+    description: "Cute bed set",
+    price: "7.000.000",
+    oldPrice: "14.000.000",
+    discount: 50,
+  },
+  {
+    id: 7,
+    image: HeroImage,
+    title: "Potty",
+    description: "Minimalist flower pot",
+    price: "500.000",
+  },
+  {
+    id: 8,
+    image: HeroImage,
+    title: "Grifo",
+    description: "Stylish lamp",
+    price: "1.500.000",
+  },
+];

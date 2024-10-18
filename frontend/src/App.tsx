@@ -3,7 +3,7 @@ import React from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import AppBar from './components/AppBar';
-import HomePage from './pages/HomePage';
+import HomePage from './pages/home/HomePage';
 import ProductsPage from './pages/ProductsPage';
 import GlobalStyles from './styles/GlobalStyles';
 import { theme } from './styles/theme';
