@@ -2,7 +2,7 @@
     {
         "name": "Syltherine",
         "sku": "S002",
-        "category_id": 1,
+        "category_id": 45,
         "description": "Stylish cafe chair",
         "large_description": "Comfortable and elegant, perfect for cafes.",
         "price": 2500000,
@@ -13,7 +13,7 @@
     {
         "name": "Leviosa",
         "sku": "S003",
-        "category_id": 1,
+        "category_id": 45,
         "description": "Luxury big sofa",
         "large_description": "Perfect for the entire family with premium comfort.",
         "price": 7000000,
@@ -24,7 +24,7 @@
     {
         "name": "Lolito",
         "sku": "S004",
-        "category_id": 2,
+        "category_id": 46,
         "description": "Outdoor bar table and stool",
         "large_description": "Durable and stylish for outdoor gatherings.",
         "price": 500000,
@@ -35,10 +35,52 @@
     {
         "name": "Muggo",
         "sku": "S005",
-        "category_id": 3,
+        "category_id": 47,
         "description": "Small mug",
         "large_description": "Perfect for coffee or tea, with a minimalist design.",
         "price": 150000,
+        "is_new": true
+    },
+    {
+        "name": "Respira",
+        "sku": "S006",
+        "category_id": 48,
+        "description": "Night lamp",
+        "large_description": "Elegant night lamp with soft lighting, perfect for a bedroom.",
+        "price": 1500000,
+        "discount_price": 1200000,
+        "discount_percent": 20,
+        "is_new": false
+    },
+    {
+        "name": "Grifo",
+        "sku": "S007",
+        "category_id": 48,
+        "description": "Stylish lamp",
+        "large_description": "Stylish modern lamp with a sleek design, great for living rooms or bedrooms.",
+        "price": 1500000,
+        "is_new": false
+    },
+    {
+        "name": "Pingky",
+        "sku": "S008",
+        "category_id": 45,
+        "description": "Cute bed set",
+        "large_description": "Soft and cozy bed set that adds warmth to your bedroom decor.",
+        "price": 7000000,
+        "discount_price": 5600000,
+        "discount_percent": 20,
+        "is_new": false
+    },
+    {
+        "name": "Potty",
+        "sku": "S009",
+        "category_id": 46,
+        "description": "Minimalist flower pot",
+        "large_description": "Modern minimalist flower pot, ideal for home or office use.",
+        "price": 500000,
+        "discount_price": 450000,
+        "discount_percent": 10,
         "is_new": true
     }
 ]

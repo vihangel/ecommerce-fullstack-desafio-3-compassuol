@@ -1,15 +1,22 @@
 // src/category/category.service.ts
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateCategoryDto } from '../dto/create-category.dto';
 import { Category } from '../models/category.model';
+import { Product } from '../models/product.model';
 
 @Injectable()
 export class CategoryService {
   constructor(
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
+    @InjectRepository(Product)
+    private productRepository: Repository<Product>,
   ) {}
 
   async findAll(): Promise<Category[]> {
@@ -25,6 +32,15 @@ export class CategoryService {
   }
 
   async create(categoryData: CreateCategoryDto): Promise<Category> {
+    const existingCategory = await this.categoryRepository.findOne({
+      where: { name: categoryData.name },
+    });
+    if (existingCategory) {
+      throw new ConflictException(
+        `Category with name "${categoryData.name}" already exists`,
+      );
+    }
+
     const newCategory = this.categoryRepository.create(categoryData);
     return this.categoryRepository.save(newCategory);
   }
@@ -41,5 +57,13 @@ export class CategoryService {
   async remove(id: number): Promise<void> {
     const category = await this.findOne(id);
     await this.categoryRepository.remove(category);
+  }
+
+  async removeAll(): Promise<void> {
+    // Primeiro, remover todos os produtos para evitar violação de chave estrangeira
+    await this.productRepository.delete({});
+
+    // Depois, remover todas as categorias
+    await this.categoryRepository.delete({});
   }
 }

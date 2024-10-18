@@ -30,14 +30,14 @@ export class ProductController {
     return this.productService.findOne(id);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Post()
   @UseInterceptors(FileInterceptor('image'))
   async create(
-    @Body() productData: CreateProductDto,
-    @UploadedFile() image: Express.Multer.File,
+    @Body('product_data') productData: string,
+    @UploadedFile() image?: Express.Multer.File,
   ) {
-    return this.productService.create(productData, image);
+    const parsedProductData: CreateProductDto = JSON.parse(productData);
+    return this.productService.create(parsedProductData, image);
   }
 
   @UseGuards(JwtAuthGuard)

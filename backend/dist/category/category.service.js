@@ -17,9 +17,11 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const category_model_1 = require("../models/category.model");
+const product_model_1 = require("../models/product.model");
 let CategoryService = class CategoryService {
-    constructor(categoryRepository) {
+    constructor(categoryRepository, productRepository) {
         this.categoryRepository = categoryRepository;
+        this.productRepository = productRepository;
     }
     async findAll() {
         return this.categoryRepository.find();
@@ -32,6 +34,12 @@ let CategoryService = class CategoryService {
         return category;
     }
     async create(categoryData) {
+        const existingCategory = await this.categoryRepository.findOne({
+            where: { name: categoryData.name },
+        });
+        if (existingCategory) {
+            throw new common_1.ConflictException(`Category with name "${categoryData.name}" already exists`);
+        }
         const newCategory = this.categoryRepository.create(categoryData);
         return this.categoryRepository.save(newCategory);
     }
@@ -44,11 +52,17 @@ let CategoryService = class CategoryService {
         const category = await this.findOne(id);
         await this.categoryRepository.remove(category);
     }
+    async removeAll() {
+        await this.productRepository.delete({});
+        await this.categoryRepository.delete({});
+    }
 };
 exports.CategoryService = CategoryService;
 exports.CategoryService = CategoryService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(category_model_1.Category)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __param(1, (0, typeorm_1.InjectRepository)(product_model_1.Product)),
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository])
 ], CategoryService);
 //# sourceMappingURL=category.service.js.map

@@ -36,40 +36,48 @@ let ProductService = class ProductService {
         });
     }
     async create(productData, image) {
-        const category = await this.categoryRepository.findOne({
-            where: { id: productData.category_id },
-        });
-        if (!category) {
-            throw new common_1.NotFoundException(`Categoria com ID ${productData.category_id} não encontrada`);
-        }
-        const newProduct = this.productRepository.create({
-            name: productData.name,
-            sku: productData.sku,
-            description: productData.description,
-            large_description: productData.large_description,
-            price: productData.price,
-            discount_price: productData.discount_price,
-            discount_percent: productData.discount_percent,
-            is_new: productData.is_new,
-            created_date: new Date(),
-            updated_date: new Date(),
-            category: { id: productData.category_id },
-        });
-        const savedProduct = await this.productRepository.save(newProduct);
-        if (image) {
-            try {
-                const result = await cloudinary_1.v2.uploader.upload(image.path, {
-                    folder: 'products',
-                    public_id: `product_${savedProduct.id}`,
-                });
-                savedProduct.image_url = result.secure_url;
-                await this.productRepository.save(savedProduct);
+        console.log('Dados recebidos:', productData);
+        try {
+            const category = await this.categoryRepository.findOne({
+                where: { id: productData.category_id },
+            });
+            if (!category) {
+                throw new common_1.NotFoundException(`Categoria com ID ${productData.category_id} não encontrada`);
             }
-            catch (error) {
-                throw new Error('Erro ao salvar a imagem no Cloudinary: ' + error.message);
+            const newProduct = this.productRepository.create({
+                name: productData.name,
+                sku: productData.sku,
+                description: productData.description,
+                large_description: productData.large_description,
+                price: productData.price,
+                discount_price: productData.discount_price,
+                discount_percent: productData.discount_percent,
+                is_new: productData.is_new,
+                created_date: new Date(),
+                updated_date: new Date(),
+                category: { id: productData.category_id },
+            });
+            const savedProduct = await this.productRepository.save(newProduct);
+            if (image) {
+                try {
+                    const result = await cloudinary_1.v2.uploader.upload(image.path, {
+                        folder: 'products',
+                        public_id: `product_${savedProduct.id}`,
+                    });
+                    savedProduct.image_url = result.secure_url;
+                    await this.productRepository.save(savedProduct);
+                }
+                catch (error) {
+                    console.error('Erro ao salvar a imagem no Cloudinary:', error.message);
+                    throw new Error('Erro ao salvar a imagem no Cloudinary: ' + error.message);
+                }
             }
+            return savedProduct;
         }
-        return savedProduct;
+        catch (error) {
+            console.error('Erro ao criar produto:', error.message);
+            throw new Error('Erro ao criar produto: ' + error.message);
+        }
     }
     async update(id, updateData) {
         const product = await this.findOne(id);
@@ -85,22 +93,38 @@ let ProductService = class ProductService {
     }
     async remove(id) {
         const product = await this.findOne(id);
-        await this.productRepository.remove(product);
-        const imagePath = (0, path_1.join)(__dirname, '..', '..', 'uploads', `${id}.png`);
-        await fs_1.promises.unlink(imagePath).catch((err) => {
-            if (err.code !== 'ENOENT') {
-                throw err;
+        if (!product) {
+            throw new common_1.NotFoundException(`Produto com ID ${id} não encontrado.`);
+        }
+        if (product.image_url) {
+            try {
+                const publicId = product.image_url.split('/').pop()?.split('.')[0];
+                if (publicId) {
+                    await cloudinary_1.v2.uploader.destroy(`products/${publicId}`);
+                }
             }
-        });
+            catch (error) {
+                throw new Error('Erro ao remover a imagem do Cloudinary: ' + error.message);
+            }
+        }
+        await this.productRepository.remove(product);
     }
     async removeAll() {
-        await this.productRepository.clear();
-        const uploadsPath = (0, path_1.join)(__dirname, '..', '..', 'uploads');
-        await fs_1.promises.rm(uploadsPath, { recursive: true, force: true }).catch((err) => {
-            if (err.code !== 'ENOENT') {
-                throw err;
+        const products = await this.productRepository.find();
+        for (const product of products) {
+            if (product.image_url) {
+                try {
+                    const publicId = product.image_url.split('/').pop()?.split('.')[0];
+                    if (publicId) {
+                        await cloudinary_1.v2.uploader.destroy(`products/${publicId}`);
+                    }
+                }
+                catch (error) {
+                    console.error('Erro ao remover a imagem do Cloudinary:', error.message);
+                }
             }
-        });
+        }
+        await this.productRepository.clear();
     }
 };
 exports.ProductService = ProductService;

@@ -37,6 +37,10 @@ let CategoryController = class CategoryController {
         await this.categoryService.remove(id);
         return { message: `Category with ID ${id} has been deleted` };
     }
+    async removeAll() {
+        await this.categoryService.removeAll();
+        return { message: 'All categories have been deleted' };
+    }
 };
 exports.CategoryController = CategoryController;
 __decorate([
@@ -77,6 +81,13 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], CategoryController.prototype, "remove", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Delete)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], CategoryController.prototype, "removeAll", null);
 exports.CategoryController = CategoryController = __decorate([
     (0, common_1.Controller)('categories'),
     __metadata("design:paramtypes", [category_service_1.CategoryService])

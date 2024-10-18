@@ -53,4 +53,12 @@ export class CategoryController {
     await this.categoryService.remove(id);
     return { message: `Category with ID ${id} has been deleted` };
   }
+
+  // Rota protegida para remover todas as categorias
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  async removeAll() {
+    await this.categoryService.removeAll();
+    return { message: 'All categories have been deleted' };
+  }
 }

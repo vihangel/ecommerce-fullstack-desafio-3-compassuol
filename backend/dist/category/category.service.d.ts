@@ -1,12 +1,15 @@
 import { Repository } from 'typeorm';
 import { CreateCategoryDto } from '../dto/create-category.dto';
 import { Category } from '../models/category.model';
+import { Product } from '../models/product.model';
 export declare class CategoryService {
     private categoryRepository;
-    constructor(categoryRepository: Repository<Category>);
+    private productRepository;
+    constructor(categoryRepository: Repository<Category>, productRepository: Repository<Product>);
     findAll(): Promise<Category[]>;
     findOne(id: number): Promise<Category>;
     create(categoryData: CreateCategoryDto): Promise<Category>;
     update(id: number, updateData: Partial<CreateCategoryDto>): Promise<Category>;
     remove(id: number): Promise<void>;
+    removeAll(): Promise<void>;
 }

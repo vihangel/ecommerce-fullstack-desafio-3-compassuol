@@ -16,7 +16,6 @@ exports.ProductController = void 0;
 const common_1 = require("@nestjs/common");
 const platform_express_1 = require("@nestjs/platform-express");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
-const create_product_dto_1 = require("../dto/create-product.dto");
 const product_service_1 = require("./product.service");
 let ProductController = class ProductController {
     constructor(productService) {
@@ -29,7 +28,8 @@ let ProductController = class ProductController {
         return this.productService.findOne(id);
     }
     async create(productData, image) {
-        return this.productService.create(productData, image);
+        const parsedProductData = JSON.parse(productData);
+        return this.productService.create(parsedProductData, image);
     }
     async update(id, updateData) {
         return this.productService.update(id, updateData);
@@ -58,13 +58,12 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "findOne", null);
 __decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Post)(),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('image')),
-    __param(0, (0, common_1.Body)()),
+    __param(0, (0, common_1.Body)('product_data')),
     __param(1, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_product_dto_1.CreateProductDto, Object]),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "create", null);
 __decorate([

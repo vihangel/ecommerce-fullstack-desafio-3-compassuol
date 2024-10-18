@@ -5,8 +5,9 @@ API_BASE_URL="http://localhost:3000"
 USERNAME="angel"
 PASSWORD="123456"
 TOKEN_FILE="./scripts/token.txt"
-CATEGORIES_FILE="./json/categories.json"
-PRODUCTS_FILE="./json/products.json"
+CATEGORIES_FILE="/Users/angel/Documents/GitHub/uol/ecommerce-backend-desafio-3-compassuol/scripts/json/categories.json"
+PRODUCTS_FILE="/Users/angel/Documents/GitHub/uol/ecommerce-backend-desafio-3-compassuol/scripts/json/products.json"
+IMAGES_DIR="/Users/angel/Documents/GitHub/uol/ecommerce-backend-desafio-3-compassuol/frontend/src/assets/mock_images"
 
 # Função para fazer login e salvar o token
 login() {
@@ -56,21 +57,22 @@ add_product() {
 
   echo "Adicionando produto: $(echo "$product_data" | jq -r '.name')"
 
-  # Cria um arquivo temporário para os dados do produto
-  temp_product_file=$(mktemp)
-  echo "$product_data" > "$temp_product_file"
-
-  # Envia o produto e a imagem como multipart/form-data
-  RESPONSE=$(curl --silent --location --request POST "${API_BASE_URL}/products" \
-    --header "Authorization: Bearer $TOKEN" \
-    -F "product_data=@${temp_product_file}" \
-    -F "image=@${image_path}")
+  if [ -f "$image_path" ]; then
+    # Envia o produto e a imagem como multipart/form-data
+    RESPONSE=$(curl --silent --location --request POST "${API_BASE_URL}/products" \
+      --header "Authorization: Bearer $TOKEN" \
+      -F "product_data=$(echo "$product_data")" \
+      -F "image=@${image_path}")
+  else
+    # Caso não exista imagem, envia apenas o produto
+    RESPONSE=$(curl --silent --location --request POST "${API_BASE_URL}/products" \
+      --header "Authorization: Bearer $TOKEN" \
+      --header 'Content-Type: application/json' \
+      --data-raw "$product_data")
+  fi
 
   echo "Resposta: $RESPONSE"
   echo -e "\nProduto adicionado com sucesso."
-
-  # Remove o arquivo temporário
-  rm "$temp_product_file"
 }
 
 # Faz login e salva o token
@@ -89,12 +91,16 @@ fi
 # Adicionando produtos
 if [ -f "$PRODUCTS_FILE" ]; then
   jq -c '.[]' "$PRODUCTS_FILE" | while IFS= read -r product; do
-    # Supondo que as imagens estão na pasta "../frontend/src/assets/mock_images/"
-    image_path="../frontend/src/assets/mock_images/$(echo "$product" | jq -r '.name' | tr ' ' '_' | tr '[:upper:]' '[:lower:]').png"
+    # Ajustar o caminho das imagens com base no nome do produto
+    image_name=$(echo "$product" | jq -r '.name' | tr ' ' '_' | tr '[:upper:]' '[:lower:]')
+    image_path="${IMAGES_DIR}/${image_name}.png"
+
     if [ ! -f "$image_path" ]; then
       echo "Aviso: imagem não encontrada para $(echo "$product" | jq -r '.name'). Produto será adicionado sem imagem."
+      add_product "$product" ""
+    else
+      add_product "$product" "$image_path"
     fi
-    add_product "$product" "$image_path"
   done
 else
   echo "Arquivo de produtos não encontrado."

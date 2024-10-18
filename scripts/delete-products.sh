@@ -15,7 +15,7 @@ RESPONSE=$(curl --silent --location --request POST "${API_BASE_URL}/auth/login" 
     \"password\": \"${PASSWORD}\"
   }")
 
-TOKEN=$(echo $RESPONSE | jq -r '.access_token')
+TOKEN=$(echo "$RESPONSE" | jq -r '.access_token')
 
 if [ "$TOKEN" == "null" ]; then
   echo "Erro ao fazer login. Verifique suas credenciais."
@@ -26,24 +26,16 @@ fi
 echo "$TOKEN" > "$TOKEN_FILE"
 echo "Login realizado com sucesso. Token salvo."
 
-# Listar todos os produtos
-echo "Listando todos os produtos..."
-curl --location --request GET "${API_BASE_URL}/products" \
+# Deletar todos os produtos
+echo "Deletando todos os produtos..."
+curl --location --request DELETE "${API_BASE_URL}/products" \
   --header "Authorization: Bearer $TOKEN" \
   --header 'Content-Type: application/json'
+echo -e "\nTodos os produtos foram deletados."
 
-echo ""
-
-# Deletar todos os produtos
-echo "Deseja deletar todos os produtos? (s/n)"
-read -r CONFIRM
-
-if [ "$CONFIRM" == "s" ]; then
-  echo "Deletando todos os produtos..."
-  curl --location --request DELETE "${API_BASE_URL}/products" \
-    --header "Authorization: Bearer $TOKEN" \
-    --header 'Content-Type: application/json'
-  echo "\nTodos os produtos foram deletados."
-else
-  echo "Operação de deletar produtos cancelada."
-fi
+# Deletar todas as categorias
+echo "Deletando todas as categorias..."
+curl --location --request DELETE "${API_BASE_URL}/categories" \
+  --header "Authorization: Bearer $TOKEN" \
+  --header 'Content-Type: application/json'
+echo -e "\nTodas as categorias foram deletadas."

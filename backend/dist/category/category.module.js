@@ -10,6 +10,7 @@ exports.CategoryModule = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const category_model_1 = require("../models/category.model");
+const product_model_1 = require("../models/product.model");
 const category_controller_1 = require("./category.controller");
 const category_service_1 = require("./category.service");
 let CategoryModule = class CategoryModule {
@@ -17,9 +18,12 @@ let CategoryModule = class CategoryModule {
 exports.CategoryModule = CategoryModule;
 exports.CategoryModule = CategoryModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([category_model_1.Category])],
-        controllers: [category_controller_1.CategoryController],
+        imports: [
+            typeorm_1.TypeOrmModule.forFeature([category_model_1.Category, product_model_1.Product]),
+        ],
         providers: [category_service_1.CategoryService],
+        controllers: [category_controller_1.CategoryController],
+        exports: [category_service_1.CategoryService],
     })
 ], CategoryModule);
 //# sourceMappingURL=category.module.js.map

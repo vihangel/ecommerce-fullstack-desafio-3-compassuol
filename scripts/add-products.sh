@@ -36,32 +36,34 @@ add_product() {
   local product_data=$1
   local image_path=$2
 
-  echo "Adicionando produto: $(echo $product_data | jq -r '.name')"
+  echo "Adicionando produto: $(echo "$product_data" | jq -r '.name')"
 
-  # Envia o produto e a imagem como multipart/form-data
+  # Cria um arquivo temporário para os dados do produto
+  temp_product_file=$(mktemp)
+  echo "$product_data" > "$temp_product_file"
+
+  # Verifica se a imagem existe
   if [ -f "$image_path" ]; then
-    curl --location --request POST "${API_BASE_URL}/products" \
+    # Envia o produto e a imagem como multipart/form-data
+    RESPONSE=$(curl --silent --location --request POST "${API_BASE_URL}/products" \
       --header "Authorization: Bearer $TOKEN" \
-      -F "image=@${image_path}" \
-      -F "name=$(echo $product_data | jq -r '.name')" \
-      -F "sku=$(echo $product_data | jq -r '.sku')" \
-      -F "category_id=$(echo $product_data | jq -r '.category_id')" \
-      -F "description=$(echo $product_data | jq -r '.description')" \
-      -F "large_description=$(echo $product_data | jq -r '.large_description')" \
-      -F "price=$(echo $product_data | jq -r '.price')" \
-      -F "discount_price=$(echo $product_data | jq -r '.discount_price')" \
-      -F "discount_percent=$(echo $product_data | jq -r '.discount_percent')" \
-      -F "is_new=$(echo $product_data | jq -r '.is_new')"
+      -F "product_data=@${temp_product_file};type=application/json" \
+      -F "image=@${image_path}")
   else
-    echo "Aviso: imagem não encontrada para $product. Produto será adicionado sem imagem."
-    curl --location --request POST "${API_BASE_URL}/products" \
+    # Caso não exista imagem, envia apenas o produto
+    RESPONSE=$(curl --silent --location --request POST "${API_BASE_URL}/products" \
       --header "Authorization: Bearer $TOKEN" \
       --header 'Content-Type: application/json' \
-      --data-raw "$product_data"
+      --data-raw "$product_data")
   fi
 
+  echo "Resposta: $RESPONSE"
   echo -e "\nProduto adicionado com sucesso."
+
+  # Remove o arquivo temporário
+  rm "$temp_product_file"
 }
+
 
 # Faz login e salva o token
 login

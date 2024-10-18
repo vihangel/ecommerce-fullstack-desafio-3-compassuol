@@ -10,4 +10,7 @@ export declare class CategoryController {
     remove(id: number): Promise<{
         message: string;
     }>;
+    removeAll(): Promise<{
+        message: string;
+    }>;
 }
