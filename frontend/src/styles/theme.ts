@@ -10,6 +10,7 @@ export const theme = {
     background: "#F4F5F7",
     text: "#333333", // Preto Suave (texto principal)
     muted: "#9F9F9F", // Cinza Escuro (texto secundário)
+    hr: "#D9D9D9",
     linkHover: "#B88E2F",
     white: "#FFFFFF",
     black: "#000000",

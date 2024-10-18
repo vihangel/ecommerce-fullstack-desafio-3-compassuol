@@ -6,6 +6,7 @@ import Container from '../../components/shared/Container';
 import { theme } from '../../styles/theme';
 import ProductSection from '../home/components/ProductSection';
 import CategorySection from './components/CategorySection';
+import FeatureSection from './components/FeatureSection';
 
 const HomePage: React.FC = () => {
   return (
@@ -27,6 +28,7 @@ const HomePage: React.FC = () => {
       </HeroSection>
       <CategorySection></CategorySection>
       <ProductSection title="Our Products" products={mockProducts} />
+      <FeatureSection></FeatureSection>
     </Main>
   );
 };
