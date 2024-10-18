@@ -96,6 +96,7 @@ const NavBar = styled.nav`
   box-sizing: border-box;
   width: 100%;
   position: fixed;
+  z-index: 100;
 `;
 
 const LogoWrapper = styled.div`
