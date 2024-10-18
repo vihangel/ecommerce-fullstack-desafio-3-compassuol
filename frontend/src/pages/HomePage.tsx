@@ -14,11 +14,12 @@ const HomePage: React.FC = () => {
         </HeroImageWrapper>
         <Container>
           <HeroContent>
-            <h2>Lorem ipsum dolor sit amet</h2>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut
-              elit tellus, luctus nec ullamcorper mattis.
-            </p>
+          <h2>Transforme sua casa!</h2>
+<p>
+  Descubra móveis e decorações que combinam com seu estilo e trazem conforto
+  e elegância ao seu lar. Dê vida aos seus espaços e crie memórias inesquecíveis.
+</p>
+
           </HeroContent>
         </Container>
       </HeroSection>
@@ -28,7 +29,7 @@ const HomePage: React.FC = () => {
 
 export default HomePage;
 
-// Styled Components
+
 const Main = styled.main`
   padding-top: 100px; /* Para garantir que o conteúdo não fique atrás da AppBar */
 `;
