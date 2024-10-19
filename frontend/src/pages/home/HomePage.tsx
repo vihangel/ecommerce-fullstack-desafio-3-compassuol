@@ -15,30 +15,35 @@ const HomePage: React.FC = () => {
   const [products, setProducts] = useState(mockProducts); 
   const [loading, setLoading] = useState<boolean>(!useMockData); 
 
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
-    if (!useMockData) {
+    if (useMockData) {
       setLoading(true);
+      setTimeout(() => {
+        setProducts(mockProducts);
+        setLoading(false);
+      }, 2000); 
+    } else {
+      setLoading(true);
+      setError(null);
       axios
         .get('http://localhost:3000/products?limit=8')
         .then((response) => {
-      
-            setProducts(response.data);
-          
+          setProducts(response.data);
         })
         .catch((error) => {
           console.error('Erro ao buscar produtos:', error);
-          setProducts(mockProducts); 
+          setError('Estamos com problemas para exibir os produtos. Tente novamente mais tarde.');
+          setProducts(mockProducts);
         })
         .finally(() => {
           setLoading(false);
         });
     }
   }, [useMockData]);
-  
 
-  if (loading) {
-    return <p>Carregando produtos...</p>; 
-  }
+  
 
   return (
     <Main>
@@ -57,13 +62,37 @@ const HomePage: React.FC = () => {
         </Container>
       </HeroSection>
       <CategorySection />
-      <ProductSection title="Our Products" products={products} />
+      
+      {loading ? (
+        <LoadingMessage>Carregando produtos...</LoadingMessage>
+      ) : error ? (
+        <ErrorMessage>{error}</ErrorMessage>
+      ) : (
+        <ProductSection title="Our Products" products={products} />
+      )}
       <FeatureSection />
     </Main>
   );
 };
 
+
+
 export default HomePage;
+
+// Componentes adicionais para o feedback visual
+const LoadingMessage = styled.p`
+  text-align: center;
+  font-size: 1.5rem;
+  margin: 2rem 0;
+  color: ${theme.colors.text};
+`;
+
+const ErrorMessage = styled.p`
+  text-align: center;
+  font-size: 1.5rem;
+  margin: 2rem 0;
+  color: ${theme.colors.accent};
+`;
 
 // Styled Components
 const Main = styled.main`
