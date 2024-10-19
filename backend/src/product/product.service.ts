@@ -19,8 +19,34 @@ export class ProductService {
   ) {}
 
   // Método para listar todos os produtos
-  async findAll(): Promise<Product[]> {
-    return this.productRepository.find({ relations: ['category'] });
+  async findAll(
+    filters?: Partial<Product>,
+    limit?: number,
+  ): Promise<Product[]> {
+    const query = this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.category', 'category');
+
+    if (filters) {
+      if (filters.category?.id) {
+        query.andWhere('product.category.id = :categoryId', {
+          categoryId: filters.category.id,
+        });
+      }
+      if (filters.is_new !== undefined) {
+        query.andWhere('product.is_new = :isNew', { isNew: filters.is_new });
+      }
+      if (filters.price) {
+        query.andWhere('product.price <= :price', { price: filters.price });
+      }
+      // Adicione outros filtros conforme necessário
+    }
+
+    if (limit) {
+      query.limit(limit);
+    }
+
+    return query.getMany();
   }
 
   // Método para buscar um produto pelo ID

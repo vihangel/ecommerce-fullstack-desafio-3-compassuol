@@ -26,8 +26,27 @@ let ProductService = class ProductService {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }
-    async findAll() {
-        return this.productRepository.find({ relations: ['category'] });
+    async findAll(filters, limit) {
+        const query = this.productRepository
+            .createQueryBuilder('product')
+            .leftJoinAndSelect('product.category', 'category');
+        if (filters) {
+            if (filters.category?.id) {
+                query.andWhere('product.category.id = :categoryId', {
+                    categoryId: filters.category.id,
+                });
+            }
+            if (filters.is_new !== undefined) {
+                query.andWhere('product.is_new = :isNew', { isNew: filters.is_new });
+            }
+            if (filters.price) {
+                query.andWhere('product.price <= :price', { price: filters.price });
+            }
+        }
+        if (limit) {
+            query.limit(limit);
+        }
+        return query.getMany();
     }
     async findOne(id) {
         return this.productRepository.findOne({

@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -14,6 +15,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateProductDto } from '../dto/create-product.dto';
+import { Product } from '../models/product.model';
 import { ProductService } from './product.service';
 
 @Controller('products')
@@ -21,8 +23,11 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get()
-  async findAll() {
-    return this.productService.findAll();
+  async findAll(
+    @Query() filters: Partial<Product>,
+    @Query('limit') limit?: number,
+  ) {
+    return this.productService.findAll(filters, limit);
   }
 
   @Get(':id')

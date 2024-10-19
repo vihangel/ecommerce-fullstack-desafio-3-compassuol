@@ -21,8 +21,8 @@ let ProductController = class ProductController {
     constructor(productService) {
         this.productService = productService;
     }
-    async findAll() {
-        return this.productService.findAll();
+    async findAll(filters, limit) {
+        return this.productService.findAll(filters, limit);
     }
     async findOne(id) {
         return this.productService.findOne(id);
@@ -46,8 +46,10 @@ let ProductController = class ProductController {
 exports.ProductController = ProductController;
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)()),
+    __param(1, (0, common_1.Query)('limit')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object, Number]),
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "findAll", null);
 __decorate([
