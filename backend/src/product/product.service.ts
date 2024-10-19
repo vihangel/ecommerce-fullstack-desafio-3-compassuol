@@ -1,7 +1,12 @@
-import { Injectable } from '@nestjs/common';
+// src/product/product.service.ts
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { v2 as cloudinary } from 'cloudinary';
+import { promises as fs } from 'fs';
+import { join } from 'path';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from '../dto/create-product.dto';
+import { Category } from '../models/category.model';
 import { Product } from '../models/product.model';
 
 @Injectable()
@@ -9,11 +14,39 @@ export class ProductService {
   constructor(
     @InjectRepository(Product)
     private productRepository: Repository<Product>,
+    @InjectRepository(Category)
+    private categoryRepository: Repository<Category>,
   ) {}
 
   // Método para listar todos os produtos
-  async findAll(): Promise<Product[]> {
-    return this.productRepository.find({ relations: ['category'] });
+  async findAll(
+    filters?: Partial<Product>,
+    limit?: number,
+  ): Promise<Product[]> {
+    const query = this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.category', 'category');
+
+    if (filters) {
+      if (filters.category?.id) {
+        query.andWhere('product.category.id = :categoryId', {
+          categoryId: filters.category.id,
+        });
+      }
+      if (filters.is_new !== undefined) {
+        query.andWhere('product.is_new = :isNew', { isNew: filters.is_new });
+      }
+      if (filters.price) {
+        query.andWhere('product.price <= :price', { price: filters.price });
+      }
+      // Adicione outros filtros conforme necessário
+    }
+
+    if (limit) {
+      query.limit(limit);
+    }
+
+    return query.getMany();
   }
 
   // Método para buscar um produto pelo ID
@@ -24,55 +57,63 @@ export class ProductService {
     });
   }
 
-  async findWithFilters(filters: {
-    name?: string;
-    category?: string;
-    minPrice?: number;
-    maxPrice?: number;
-  }): Promise<Product[]> {
-    const queryBuilder = this.productRepository.createQueryBuilder('product');
-
-    if (filters.name) {
-      queryBuilder.andWhere('product.name ILIKE :name', {
-        name: `%${filters.name}%`,
+  async create(
+    productData: CreateProductDto,
+    image?: Express.Multer.File,
+  ): Promise<Product> {
+    console.log('Dados recebidos:', productData);
+    try {
+      const category = await this.categoryRepository.findOne({
+        where: { id: productData.category_id },
       });
-    }
 
-    if (filters.category) {
-      queryBuilder.innerJoinAndSelect(
-        'product.category',
-        'category',
-        'category.name ILIKE :category',
-        { category: `%${filters.category}%` },
-      );
-    } else {
-      queryBuilder.leftJoinAndSelect('product.category', 'category');
-    }
+      if (!category) {
+        throw new NotFoundException(
+          `Categoria com ID ${productData.category_id} não encontrada`,
+        );
+      }
 
-    if (filters.minPrice) {
-      queryBuilder.andWhere('product.price >= :minPrice', {
-        minPrice: filters.minPrice,
+      const newProduct = this.productRepository.create({
+        name: productData.name,
+        sku: productData.sku,
+        description: productData.description,
+        large_description: productData.large_description,
+        price: productData.price,
+        discount_price: productData.discount_price,
+        discount_percent: productData.discount_percent,
+        is_new: productData.is_new,
+        created_date: new Date(),
+        updated_date: new Date(),
+        category: { id: productData.category_id } as any,
       });
+
+      const savedProduct = await this.productRepository.save(newProduct);
+
+      // Upload da imagem para o Cloudinary
+      if (image) {
+        try {
+          const result = await cloudinary.uploader.upload(image.path, {
+            folder: 'products',
+            public_id: `product_${savedProduct.id}`,
+          });
+          savedProduct.image_url = result.secure_url;
+          await this.productRepository.save(savedProduct);
+        } catch (error) {
+          console.error(
+            'Erro ao salvar a imagem no Cloudinary:',
+            error.message,
+          );
+          throw new Error(
+            'Erro ao salvar a imagem no Cloudinary: ' + error.message,
+          );
+        }
+      }
+
+      return savedProduct;
+    } catch (error) {
+      console.error('Erro ao criar produto:', error.message);
+      throw new Error('Erro ao criar produto: ' + error.message);
     }
-
-    if (filters.maxPrice) {
-      queryBuilder.andWhere('product.price <= :maxPrice', {
-        maxPrice: filters.maxPrice,
-      });
-    }
-
-    return queryBuilder.getMany();
-  }
-
-  // Método para criar um novo produto
-  async create(productData: CreateProductDto): Promise<Product> {
-    // Aqui, criamos uma instância de Product a partir do DTO, mas sem as propriedades que são geradas automaticamente
-    const newProduct = this.productRepository.create({
-      ...productData,
-      created_date: new Date(), // Adiciona a data de criação
-      updated_date: new Date(), // Adiciona a data de atualização
-    });
-    return this.productRepository.save(newProduct);
   }
 
   // Método para atualizar um produto existente
@@ -84,12 +125,68 @@ export class ProductService {
     const updatedProduct = Object.assign(product, updateData, {
       updated_date: new Date(),
     });
+
+    // Se houver imagem base64 no update, atualiza o arquivo de imagem
+    if (updateData.image_data) {
+      const imageBuffer = Buffer.from(updateData.image_data, 'base64');
+      const imagePath = join(__dirname, '..', '..', 'uploads', `${id}.png`);
+      await fs.writeFile(imagePath, imageBuffer);
+    }
+
     return this.productRepository.save(updatedProduct);
   }
 
   // Método para remover um produto pelo ID
   async remove(id: number): Promise<void> {
     const product = await this.findOne(id);
+
+    if (!product) {
+      throw new NotFoundException(`Produto com ID ${id} não encontrado.`);
+    }
+
+    // Remove a imagem associada do Cloudinary se existir
+    if (product.image_url) {
+      try {
+        // Extrair o public_id a partir da URL da imagem armazenada no Cloudinary
+        const publicId = product.image_url.split('/').pop()?.split('.')[0]; // Pega o último trecho da URL e remove a extensão
+        if (publicId) {
+          await cloudinary.uploader.destroy(`products/${publicId}`);
+        }
+      } catch (error) {
+        throw new Error(
+          'Erro ao remover a imagem do Cloudinary: ' + error.message,
+        );
+      }
+    }
+
+    // Remove o produto do banco de dados
     await this.productRepository.remove(product);
+  }
+
+  // Método para remover todos os produtos
+  async removeAll(): Promise<void> {
+    // Buscar todos os produtos
+    const products = await this.productRepository.find();
+
+    // Remover cada imagem associada do Cloudinary
+    for (const product of products) {
+      if (product.image_url) {
+        try {
+          // Extrair o public_id a partir da URL da imagem armazenada no Cloudinary
+          const publicId = product.image_url.split('/').pop()?.split('.')[0]; // Pega o último trecho da URL e remove a extensão
+          if (publicId) {
+            await cloudinary.uploader.destroy(`products/${publicId}`);
+          }
+        } catch (error) {
+          console.error(
+            'Erro ao remover a imagem do Cloudinary:',
+            error.message,
+          );
+        }
+      }
+    }
+
+    // Remover todos os produtos do banco de dados
+    await this.productRepository.clear();
   }
 }

@@ -14,29 +14,22 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductController = void 0;
 const common_1 = require("@nestjs/common");
+const platform_express_1 = require("@nestjs/platform-express");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
-const create_product_dto_1 = require("../dto/create-product.dto");
 const product_service_1 = require("./product.service");
 let ProductController = class ProductController {
     constructor(productService) {
         this.productService = productService;
     }
-    async findAll() {
-        return this.productService.findAll();
+    async findAll(filters, limit) {
+        return this.productService.findAll(filters, limit);
     }
     async findOne(id) {
         return this.productService.findOne(id);
     }
-    async findWithFilters(name, category, minPrice, maxPrice) {
-        return this.productService.findWithFilters({
-            name,
-            category,
-            minPrice,
-            maxPrice,
-        });
-    }
-    async create(productData) {
-        return this.productService.create(productData);
+    async create(productData, image) {
+        const parsedProductData = JSON.parse(productData);
+        return this.productService.create(parsedProductData, image);
     }
     async update(id, updateData) {
         return this.productService.update(id, updateData);
@@ -45,12 +38,18 @@ let ProductController = class ProductController {
         await this.productService.remove(id);
         return { message: `Product with ID ${id} has been deleted` };
     }
+    async removeAll() {
+        await this.productService.removeAll();
+        return { message: `All products have been deleted` };
+    }
 };
 exports.ProductController = ProductController;
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)()),
+    __param(1, (0, common_1.Query)('limit')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object, Number]),
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "findAll", null);
 __decorate([
@@ -61,21 +60,12 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "findOne", null);
 __decorate([
-    (0, common_1.Get)('filter'),
-    __param(0, (0, common_1.Query)('name')),
-    __param(1, (0, common_1.Query)('category')),
-    __param(2, (0, common_1.Query)('minPrice')),
-    __param(3, (0, common_1.Query)('maxPrice')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, Number, Number]),
-    __metadata("design:returntype", Promise)
-], ProductController.prototype, "findWithFilters", null);
-__decorate([
-    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('image')),
+    __param(0, (0, common_1.Body)('product_data')),
+    __param(1, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_product_dto_1.CreateProductDto]),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "create", null);
 __decorate([
@@ -95,6 +85,13 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "remove", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Delete)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], ProductController.prototype, "removeAll", null);
 exports.ProductController = ProductController = __decorate([
     (0, common_1.Controller)('products'),
     __metadata("design:paramtypes", [product_service_1.ProductService])

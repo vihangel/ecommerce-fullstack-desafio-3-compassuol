@@ -6,6 +6,8 @@
       "dom.iterable",
       "esnext"
     ],
+    "typeRoots": ["node_modules/@types"],
+    "types": ["styled-components"],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,

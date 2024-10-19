@@ -15,14 +15,38 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
+const cloudinary_1 = require("cloudinary");
+const fs_1 = require("fs");
+const path_1 = require("path");
 const typeorm_2 = require("typeorm");
+const category_model_1 = require("../models/category.model");
 const product_model_1 = require("../models/product.model");
 let ProductService = class ProductService {
-    constructor(productRepository) {
+    constructor(productRepository, categoryRepository) {
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
-    async findAll() {
-        return this.productRepository.find({ relations: ['category'] });
+    async findAll(filters, limit) {
+        const query = this.productRepository
+            .createQueryBuilder('product')
+            .leftJoinAndSelect('product.category', 'category');
+        if (filters) {
+            if (filters.category?.id) {
+                query.andWhere('product.category.id = :categoryId', {
+                    categoryId: filters.category.id,
+                });
+            }
+            if (filters.is_new !== undefined) {
+                query.andWhere('product.is_new = :isNew', { isNew: filters.is_new });
+            }
+            if (filters.price) {
+                query.andWhere('product.price <= :price', { price: filters.price });
+            }
+        }
+        if (limit) {
+            query.limit(limit);
+        }
+        return query.getMany();
     }
     async findOne(id) {
         return this.productRepository.findOne({
@@ -30,55 +54,104 @@ let ProductService = class ProductService {
             relations: ['category'],
         });
     }
-    async findWithFilters(filters) {
-        const queryBuilder = this.productRepository.createQueryBuilder('product');
-        if (filters.name) {
-            queryBuilder.andWhere('product.name ILIKE :name', {
-                name: `%${filters.name}%`,
+    async create(productData, image) {
+        console.log('Dados recebidos:', productData);
+        try {
+            const category = await this.categoryRepository.findOne({
+                where: { id: productData.category_id },
             });
-        }
-        if (filters.category) {
-            queryBuilder.innerJoinAndSelect('product.category', 'category', 'category.name ILIKE :category', { category: `%${filters.category}%` });
-        }
-        else {
-            queryBuilder.leftJoinAndSelect('product.category', 'category');
-        }
-        if (filters.minPrice) {
-            queryBuilder.andWhere('product.price >= :minPrice', {
-                minPrice: filters.minPrice,
+            if (!category) {
+                throw new common_1.NotFoundException(`Categoria com ID ${productData.category_id} não encontrada`);
+            }
+            const newProduct = this.productRepository.create({
+                name: productData.name,
+                sku: productData.sku,
+                description: productData.description,
+                large_description: productData.large_description,
+                price: productData.price,
+                discount_price: productData.discount_price,
+                discount_percent: productData.discount_percent,
+                is_new: productData.is_new,
+                created_date: new Date(),
+                updated_date: new Date(),
+                category: { id: productData.category_id },
             });
+            const savedProduct = await this.productRepository.save(newProduct);
+            if (image) {
+                try {
+                    const result = await cloudinary_1.v2.uploader.upload(image.path, {
+                        folder: 'products',
+                        public_id: `product_${savedProduct.id}`,
+                    });
+                    savedProduct.image_url = result.secure_url;
+                    await this.productRepository.save(savedProduct);
+                }
+                catch (error) {
+                    console.error('Erro ao salvar a imagem no Cloudinary:', error.message);
+                    throw new Error('Erro ao salvar a imagem no Cloudinary: ' + error.message);
+                }
+            }
+            return savedProduct;
         }
-        if (filters.maxPrice) {
-            queryBuilder.andWhere('product.price <= :maxPrice', {
-                maxPrice: filters.maxPrice,
-            });
+        catch (error) {
+            console.error('Erro ao criar produto:', error.message);
+            throw new Error('Erro ao criar produto: ' + error.message);
         }
-        return queryBuilder.getMany();
-    }
-    async create(productData) {
-        const newProduct = this.productRepository.create({
-            ...productData,
-            created_date: new Date(),
-            updated_date: new Date(),
-        });
-        return this.productRepository.save(newProduct);
     }
     async update(id, updateData) {
         const product = await this.findOne(id);
         const updatedProduct = Object.assign(product, updateData, {
             updated_date: new Date(),
         });
+        if (updateData.image_data) {
+            const imageBuffer = Buffer.from(updateData.image_data, 'base64');
+            const imagePath = (0, path_1.join)(__dirname, '..', '..', 'uploads', `${id}.png`);
+            await fs_1.promises.writeFile(imagePath, imageBuffer);
+        }
         return this.productRepository.save(updatedProduct);
     }
     async remove(id) {
         const product = await this.findOne(id);
+        if (!product) {
+            throw new common_1.NotFoundException(`Produto com ID ${id} não encontrado.`);
+        }
+        if (product.image_url) {
+            try {
+                const publicId = product.image_url.split('/').pop()?.split('.')[0];
+                if (publicId) {
+                    await cloudinary_1.v2.uploader.destroy(`products/${publicId}`);
+                }
+            }
+            catch (error) {
+                throw new Error('Erro ao remover a imagem do Cloudinary: ' + error.message);
+            }
+        }
         await this.productRepository.remove(product);
+    }
+    async removeAll() {
+        const products = await this.productRepository.find();
+        for (const product of products) {
+            if (product.image_url) {
+                try {
+                    const publicId = product.image_url.split('/').pop()?.split('.')[0];
+                    if (publicId) {
+                        await cloudinary_1.v2.uploader.destroy(`products/${publicId}`);
+                    }
+                }
+                catch (error) {
+                    console.error('Erro ao remover a imagem do Cloudinary:', error.message);
+                }
+            }
+        }
+        await this.productRepository.clear();
     }
 };
 exports.ProductService = ProductService;
 exports.ProductService = ProductService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(product_model_1.Product)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __param(1, (0, typeorm_1.InjectRepository)(category_model_1.Category)),
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository])
 ], ProductService);
 //# sourceMappingURL=product.service.js.map

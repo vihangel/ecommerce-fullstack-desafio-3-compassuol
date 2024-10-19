@@ -44,5 +44,6 @@ export class CreateProductDto {
   is_new: boolean;
 
   @IsOptional()
-  image_data?: Buffer; // Este campo pode receber os dados binários da imagem.
+  @IsString()
+  image_data?: string;
 }

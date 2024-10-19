@@ -1,0 +1,18 @@
+[
+    {
+        "name": "Furniture",
+        "description": "All kinds of home furniture."
+    },
+    {
+        "name": "Outdoor",
+        "description": "Outdoor furniture and accessories."
+    },
+    {
+        "name": "Lighting",
+        "description": "Lamps, lights and other lighting accessories."
+    },
+    {
+        "name": "Bedroom",
+        "description": "Items for the bedroom."
+    }
+]

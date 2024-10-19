@@ -36,9 +36,17 @@ __decorate([
     __metadata("design:type", String)
 ], Product.prototype, "description", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], Product.prototype, "large_description", void 0);
+__decorate([
     (0, typeorm_1.Column)('decimal'),
     __metadata("design:type", Number)
 ], Product.prototype, "price", void 0);
+__decorate([
+    (0, typeorm_1.Column)('decimal', { nullable: true }),
+    __metadata("design:type", Number)
+], Product.prototype, "discount_price", void 0);
 __decorate([
     (0, typeorm_1.Column)('int', { nullable: true }),
     __metadata("design:type", Number)
@@ -51,6 +59,10 @@ __decorate([
     (0, typeorm_1.Column)('bytea', { nullable: true }),
     __metadata("design:type", Buffer)
 ], Product.prototype, "image_data", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], Product.prototype, "image_url", void 0);
 __decorate([
     (0, typeorm_1.Column)('timestamp', { default: () => 'CURRENT_TIMESTAMP' }),
     __metadata("design:type", Date)
