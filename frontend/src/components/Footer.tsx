@@ -1,11 +1,37 @@
-/** @format */
-
 // src/components/Footer.tsx
-import React from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { theme } from '../styles/theme';
 
 const Footer: React.FC = () => {
+  const [email, setEmail] = useState<string>('');
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const validateEmail = (email: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const handleSubscribe = async () => {
+    if (!validateEmail(email)) { setMessage(null);
+      setError(null);
+      setError('Por favor, insira um endereço de e-mail válido.');
+      return;
+    }
+    
+    try {
+      setMessage(null);
+      setError(null);
+      await axios.post('http://localhost:3000/newsletter/send', { to: email });
+      setMessage('Inscrição realizada com sucesso! Confira seu e-mail.');
+      setEmail(''); // Limpa o campo de e-mail após o envio
+    } catch (err) {
+      setError('Erro ao tentar se inscrever. Por favor, tente novamente mais tarde.');
+    }
+  };
+
   return (
     <FooterWrapper>
       <Container>
@@ -31,13 +57,17 @@ const Footer: React.FC = () => {
         </FooterHelp>
         <FooterNewsletter>
           <ColumnTitle>Newsletter</ColumnTitle>
-          <NewsletterForm>
           <SubscriptionWrapper>
-  <SubscriptionInput type="email" placeholder="Enter Your Email Address" />
-  <SubscribeText>SUBSCRIBE</SubscribeText>
-</SubscriptionWrapper>
-
-          </NewsletterForm>
+            <SubscriptionInput
+              type="email"
+              placeholder="Enter Your Email Address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <SubscribeText onClick={handleSubscribe}>SUBSCRIBE</SubscribeText>
+          </SubscriptionWrapper>
+          {message && <SuccessMessage>{message}</SuccessMessage>}
+          {error && <ErrorMessage>{error}</ErrorMessage>}
         </FooterNewsletter>
       </Container>
       <BottomLine />
@@ -196,3 +226,15 @@ const CopyRight = styled.p`
   text-align: left;
 `;
 
+
+const SuccessMessage = styled.p`
+  margin-top: 1rem;
+  color: ${theme.colors.primary};
+  font-size: 14px;
+`;
+
+const ErrorMessage = styled.p`
+  margin-top: 1rem;
+  color: ${theme.colors.accent};
+  font-size: 14px;
+`;
