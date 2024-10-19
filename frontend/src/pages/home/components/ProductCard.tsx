@@ -4,42 +4,42 @@
 import React from 'react';
 import { FaExchangeAlt, FaHeart, FaShareAlt } from 'react-icons/fa';
 import styled from 'styled-components';
+import { Product } from '../../../models/Product';
 import { theme } from '../../../styles/theme';
 
-interface ProductProps {
-  id: number;
-  image: string;
-  title: string;
-  description: string;
-  price: string;
-  oldPrice?: string;
-  discount?: number;
-  isNew?: boolean;
-}
+interface ProductCardProps {
+  product: Product; 
+}const formatPrice = (price: string): string => {
+    return parseInt(price, 10).toLocaleString('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0,
+    });
+  };
 
-const ProductCard: React.FC<ProductProps> = ({
-  id,
-  image,
-  title,
-  description,
-  price,
-  oldPrice,
-  discount,
-  isNew,
-}) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  
+  const formattedPrice = formatPrice(product.discount_price ?? product.price);
+  const formattedOldPrice = product.discount_price ? formatPrice(product.price) : null;
+
+
   return (
     <Card>
-      {discount && <DiscountTag>-{discount}%</DiscountTag>}
-      {isNew && <NewTag>New</NewTag>}
+      {product.discount_percent && <DiscountTag>-{product.discount_percent}%</DiscountTag>}
+      {product.is_new && <NewTag>New</NewTag>}
       <ImageWrapper>
-        <Image src={image} alt={title} />
+        <Image
+          src={product.image_url}
+          alt={product.name}
+          onError={(e) => (e.currentTarget.src = '../../../assets/images/default_image.png')} 
+        />
       </ImageWrapper>
       <Content>
-        <Title>{title}</Title>
-        <Description>{description}</Description>
+        <Title>{product.name}</Title>
+        <Description>{product.description}</Description>
         <Prices>
-          <CurrentPrice>Rp {price}</CurrentPrice>
-          {oldPrice && <OldPrice>Rp {oldPrice}</OldPrice>}
+          <CurrentPrice>{formattedPrice}</CurrentPrice>
+          {formattedOldPrice && <OldPrice>{formattedOldPrice}</OldPrice>}
         </Prices>
       </Content>
       <Overlay>
@@ -77,6 +77,7 @@ const Overlay = styled.div`
   justify-content: center;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
+  overflow: hidden;
 `;
 
 const Card = styled.div`
@@ -86,7 +87,7 @@ const Card = styled.div`
   overflow: hidden;
   position: relative;
   transition: transform 0.3s ease-in-out;
-
+  min-width: 280px;
   &:hover {
     transform: translateY(-10px);
   }
@@ -94,6 +95,8 @@ const Card = styled.div`
   &:hover ${Overlay} {
     opacity: 1;
   }
+
+
 `;
 
 const DiscountTag = styled.div`
@@ -143,7 +146,7 @@ const Image = styled.img`
 `;
 
 const Content = styled.div`
-  padding: 1rem;
+  padding: 20px;
 `;
 
 const Title = styled.h3`
@@ -163,7 +166,8 @@ const Description = styled.p`
 const Prices = styled.div`
   display: flex;
   align-items: baseline;
-  gap: 1rem;
+  
+  gap: 16px;
 `;
 
 const CurrentPrice = styled.span`

@@ -8,7 +8,7 @@ interface Product {
   description: string;
   price: number;
   discount_price?: number;
-  image_data?: string; // Assumindo que seja base64 ou uma URL
+  image_data?: string; 
 }
 
 const ProductsPage: React.FC = () => {
