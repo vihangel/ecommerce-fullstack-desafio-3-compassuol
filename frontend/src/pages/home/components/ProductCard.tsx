@@ -63,6 +63,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 export default ProductCard;
 
 // Styled Components
+
 const Overlay = styled.div`
   position: absolute;
   top: 0;
@@ -82,33 +83,35 @@ const Overlay = styled.div`
 
 const Card = styled.div`
   width: 100%;
-  height: 446px;
+  height: 27.875rem; // 446px to rem
   background: ${theme.colors.background};
   overflow: hidden;
   position: relative;
   transition: transform 0.3s ease-in-out;
-  min-width: 280px;
+  min-width: 17.5rem; // 280px to rem
   &:hover {
-    transform: translateY(-10px);
+    transform: translateY(-0.625rem); // 10px to rem
   }
 
   &:hover ${Overlay} {
     opacity: 1;
   }
 
-
+  @media (max-width: 40.625rem) { // 650px to rem
+    width: 80vw;
+  }
 `;
 
 const DiscountTag = styled.div`
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: 0.9375rem; // 15px to rem
+  right: 0.9375rem; // 15px to rem
   background-color: ${theme.colors.accent};
   color: ${theme.colors.white};
-  font-size: 16px;
+  font-size: 1rem; // 16px to rem
   font-weight: 500;
-  width: 50px;
-  height: 50px;
+  width: 3.125rem; // 50px to rem
+  height: 3.125rem; // 50px to rem
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -117,20 +120,20 @@ const DiscountTag = styled.div`
 `;
 
 const NewTag = styled.div`
-position: absolute;
-top: 15px;
-right: 15px;
-background-color: ${theme.colors.secondary};
-color: ${theme.colors.white};
-font-size: 16px;
-font-weight: 500;
-width: 50px;
-height: 50px;
-border-radius: 50%;
-display: flex;
-align-items: center;
-justify-content: center;
-text-align: right;
+  position: absolute;
+  top: 0.9375rem; // 15px to rem
+  right: 0.9375rem; // 15px to rem
+  background-color: ${theme.colors.secondary};
+  color: ${theme.colors.white};
+  font-size: 1rem; // 16px to rem
+  font-weight: 500;
+  width: 3.125rem; // 50px to rem
+  height: 3.125rem; // 50px to rem
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: right;
 `;
 
 const ImageWrapper = styled.div`
@@ -146,18 +149,18 @@ const Image = styled.img`
 `;
 
 const Content = styled.div`
-  padding: 20px;
+  padding: 1.25rem; // 20px to rem
 `;
 
 const Title = styled.h3`
-  font-size: 24px;
+  font-size: 1.5rem; // 24px to rem
   font-weight: 600; // Semibold
   color: ${theme.colors.text};
   margin-bottom: 0.25rem;
 `;
 
 const Description = styled.p`
-  font-size: 16px;
+  font-size: 1rem; // 16px to rem
   font-weight: 500; // Medium
   color: ${theme.colors.muted};
   margin-bottom: 1rem;
@@ -166,30 +169,29 @@ const Description = styled.p`
 const Prices = styled.div`
   display: flex;
   align-items: baseline;
-  
-  gap: 16px;
+  gap: 1rem; // 16px to rem
 `;
 
 const CurrentPrice = styled.span`
-  font-size: 20px;
+  font-size: 1.25rem; // 20px to rem
   font-weight: 600; // Semibold
   color: ${theme.colors.text};
 `;
 
 const OldPrice = styled.span`
-  font-size: 16px;
+  font-size: 1rem; // 16px to rem
   font-weight: 400; // Regular
   color: ${theme.colors.muted};
   text-decoration: line-through;
 `;
 
 const OverlayButton = styled.button`
-  font-size: 16px;
+  font-size: 1rem; // 16px to rem
   font-weight: 600; // Semibold
   background: ${theme.colors.white};
   color: ${theme.colors.primary};
   border: 1px solid ${theme.colors.primary};
-  padding: 0.75rem 59px;
+  padding: 0.75rem 3.6875rem; // 59px to rem
 
   cursor: pointer;
   margin-bottom: 2rem;
@@ -202,11 +204,11 @@ const OverlayButton = styled.button`
 
 const OverlayIcons = styled.div`
   display: flex;
-  gap: 1.5rem;
+  gap: 1.5rem; // 24px to rem
 `;
 
 const OverlayIcon = styled.div`
-  font-size: 16px;
+  font-size: 1rem; // 16px to rem
   font-weight: 600; // Semibold
   color: #fff;
   cursor: pointer;
