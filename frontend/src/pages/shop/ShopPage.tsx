@@ -6,56 +6,86 @@ import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import FeatureSection from "../home/components/FeatureSection";
 import ProductSection from "../home/components/ProductSection";
+import Pagination from "./components/Pagination";
 import ShopControls from "./components/ShopControls";
 import ShopHero from "./components/ShopHero";
+
 const ShopPage: React.FC = () => {
   const useMockData = false;
 
   const [products, setProducts] = useState(mockProducts);
   const [loading, setLoading] = useState<boolean>(!useMockData);
-
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(16);
+  const [totalPages, setTotalPages] = useState<number>(3); // Supondo 3 páginas no total para exemplo
 
   useEffect(() => {
     if (useMockData) {
       setLoading(true);
       setTimeout(() => {
         setProducts(mockProducts);
+        setTotalPages(Math.ceil(mockProducts.length / itemsPerPage));
         setLoading(false);
       }, 2000);
     } else {
       setLoading(true);
       setError(null);
       axios
-        .get("http://localhost:3000/products?limit=8")
+        .get(
+          `http://localhost:3000/products?_page=${currentPage}&_limit=${itemsPerPage}`
+        )
         .then((response) => {
           setProducts(response.data);
+          // Assumindo que o servidor retorna um cabeçalho "X-Total-Count"
+          const totalItems = parseInt(response.headers["x-total-count"]);
+          setTotalPages(Math.ceil(totalItems / itemsPerPage));
         })
         .catch((error) => {
           console.error("Erro ao buscar produtos:", error);
           setError(
             "Estamos com problemas para exibir os produtos. Tente novamente mais tarde."
           );
-          setProducts(mockProducts);
         })
         .finally(() => {
           setLoading(false);
         });
     }
-  }, [useMockData]);
+  }, [useMockData, currentPage, itemsPerPage]);
+
+  const handlePageChange = (page: number) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
 
   return (
     <Main>
       <ShopHero />
-      <ShopControls />
+      <ShopControls
+        currentPage={1}
+        totalPages={10}
+        itemsPerPage={itemsPerPage}
+        setItemsPerPage={setItemsPerPage}
+        handlePageChange={handlePageChange}
+      />
 
       {loading ? (
         <LoadingMessage>Carregando produtos...</LoadingMessage>
       ) : error ? (
         <ErrorMessage>{error}</ErrorMessage>
       ) : (
-        <ProductSection title="Our Products" products={products} />
+        <>
+          <ProductSection title="Our Products" products={products} />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </>
       )}
+
+      {/* Pagination */}
       <FeatureSection />
     </Main>
   );
@@ -63,7 +93,6 @@ const ShopPage: React.FC = () => {
 
 export default ShopPage;
 
-// Componentes adicionais para o feedback visual
 const LoadingMessage = styled.p`
   text-align: center;
   font-size: 1.5rem;
@@ -78,7 +107,6 @@ const ErrorMessage = styled.p`
   color: ${theme.colors.accent};
 `;
 
-// Styled Components
 const Main = styled.main`
   padding-top: 100px; /* Para garantir que o conteúdo não fique atrás da AppBar */
 `;

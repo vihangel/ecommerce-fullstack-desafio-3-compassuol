@@ -10,46 +10,68 @@ import FilterIcon from "../../../assets/icons/ic_filter.svg";
 import GridIcon from "../../../assets/icons/ic_grid.svg";
 import ListIcon from "../../../assets/icons/ic_list.svg";
 
-const ShopControls: React.FC = () => {
+interface ShopControlsProps {
+  currentPage: number;
+  totalPages: number;
+  itemsPerPage: number;
+  setItemsPerPage: (value: number) => void;
+  handlePageChange: (page: number) => void;
+}
+
+const ShopControls: React.FC<ShopControlsProps> = ({
+  currentPage,
+  totalPages,
+  itemsPerPage,
+  setItemsPerPage,
+}) => {
   return (
-    <ControlsWrapper>
-      <Container>
-        <LeftControls>
-          <FilterButton>
-            <Icon src={FilterIcon} alt="Filter Icon" />
-            Filter
-          </FilterButton>
-          <ViewToggle>
-            <ViewIcon active>
-              <Icon src={GridIcon} alt="Grid Icon" />
-            </ViewIcon>
-            <ViewIcon>
-              <Icon src={ListIcon} alt="List Icon" />
-            </ViewIcon>
-          </ViewToggle>
-          <Separator />
-          <ResultsText>Showing 1–16 of 32 results</ResultsText>
-        </LeftControls>
-        <RightControls>
-          <ShowLabel>Show</ShowLabel>
-          <ShowInput type="number" defaultValue={16} />
-          <SortByLabel>Sort by</SortByLabel>
-          <SortBySelect>
-            <option value="default">Default</option>
-            <option value="price-asc">Price: Low to High</option>
-            <option value="price-desc">Price: High to Low</option>
-            <option value="newest">Newest</option>
-          </SortBySelect>
-        </RightControls>
-      </Container>
-    </ControlsWrapper>
+    <>
+      <ControlsWrapper>
+        <Container>
+          <LeftControls>
+            <FilterButton>
+              <Icon src={FilterIcon} alt="Filter Icon" />
+              Filter
+            </FilterButton>
+            <ViewToggle>
+              <ViewIcon active>
+                <Icon src={GridIcon} alt="Grid Icon" />
+              </ViewIcon>
+              <ViewIcon>
+                <Icon src={ListIcon} alt="List Icon" />
+              </ViewIcon>
+            </ViewToggle>
+            <Separator />
+            <ResultsText>
+              Showing {(currentPage - 1) * itemsPerPage + 1}–
+              {Math.min(currentPage * itemsPerPage, totalPages * itemsPerPage)}{" "}
+              of {totalPages * itemsPerPage} results
+            </ResultsText>
+          </LeftControls>
+          <RightControls>
+            <ShowLabel>Show</ShowLabel>
+            <ShowInput
+              type="number"
+              value={itemsPerPage}
+              onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
+            />
+            <SortByLabel>Sort by</SortByLabel>
+            <SortBySelect>
+              <option value="default">Default</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="newest">Newest</option>
+            </SortBySelect>
+          </RightControls>
+        </Container>
+      </ControlsWrapper>
+    </>
   );
 };
 
 export default ShopControls;
 
 // Styled Components
-
 const Icon = styled.img`
   width: 1.5rem;
   height: 1.5rem;
@@ -157,5 +179,29 @@ const SortBySelect = styled.select`
   &:focus {
     outline: none;
     border-color: ${theme.colors.primary};
+  }
+`;
+
+const PaginationWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem 0;
+`;
+
+const PageButton = styled.button<{ active?: boolean }>`
+  background: ${(props) =>
+    props.active ? theme.colors.accent : theme.colors.background};
+  color: ${(props) => (props.active ? theme.colors.white : theme.colors.text)};
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.25rem;
+
+  &:hover {
+    background: ${theme.colors.primary};
+    color: ${theme.colors.white};
   }
 `;
