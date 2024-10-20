@@ -2,27 +2,29 @@
 
 // src/components/ShopControls.tsx
 import React from "react";
-import { FaFilter, FaThLarge, FaThList } from "react-icons/fa";
 import styled from "styled-components";
 import Container from "../../../styles/Container";
 import { theme } from "../../../styles/theme";
 
+import FilterIcon from "../../../assets/icons/ic_filter.svg";
+import GridIcon from "../../../assets/icons/ic_grid.svg";
+import ListIcon from "../../../assets/icons/ic_list.svg";
+
 const ShopControls: React.FC = () => {
   return (
     <ControlsWrapper>
-      {" "}
       <Container>
         <LeftControls>
           <FilterButton>
-            <FaFilter />
+            <Icon src={FilterIcon} alt="Filter Icon" />
             Filter
           </FilterButton>
           <ViewToggle>
             <ViewIcon active>
-              <FaThLarge />
+              <Icon src={GridIcon} alt="Grid Icon" />
             </ViewIcon>
             <ViewIcon>
-              <FaThList />
+              <Icon src={ListIcon} alt="List Icon" />
             </ViewIcon>
           </ViewToggle>
           <Separator />
@@ -31,14 +33,14 @@ const ShopControls: React.FC = () => {
         <RightControls>
           <ShowLabel>Show</ShowLabel>
           <ShowInput type="number" defaultValue={16} />
-          <SortByLabel>Short by</SortByLabel>
+          <SortByLabel>Sort by</SortByLabel>
           <SortBySelect>
             <option value="default">Default</option>
             <option value="price-asc">Price: Low to High</option>
             <option value="price-desc">Price: High to Low</option>
             <option value="newest">Newest</option>
           </SortBySelect>
-        </RightControls>{" "}
+        </RightControls>
       </Container>
     </ControlsWrapper>
   );
@@ -47,6 +49,12 @@ const ShopControls: React.FC = () => {
 export default ShopControls;
 
 // Styled Components
+
+const Icon = styled.img`
+  width: 1.5rem;
+  height: 1.5rem;
+`;
+
 const ControlsWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -128,8 +136,7 @@ const ShowInput = styled.input`
   font-size: 1rem;
   padding: 0.25rem;
   text-align: center;
-  border: 1px solid ${theme.colors.muted};
-  border-radius: 4px;
+  border: 0px;
 
   &:focus {
     outline: none;
@@ -145,8 +152,7 @@ const SortByLabel = styled.label`
 const SortBySelect = styled.select`
   font-size: 1rem;
   padding: 0.25rem 0.5rem;
-  border: 1px solid ${theme.colors.muted};
-  border-radius: 4px;
+  border: 0px;
 
   &:focus {
     outline: none;
