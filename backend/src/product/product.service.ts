@@ -21,8 +21,14 @@ export class ProductService {
   // Método para listar todos os produtos
   async findAll(
     filters?: Partial<Product>,
-    limit?: number,
-  ): Promise<Product[]> {
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{
+    products: Product[];
+    totalItems: number;
+    totalPages: number;
+    currentPage: number;
+  }> {
     const query = this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.category', 'category');
@@ -46,7 +52,13 @@ export class ProductService {
       query.limit(limit);
     }
 
-    return query.getMany();
+    const skip = (page - 1) * limit;
+    query.skip(skip).take(limit);
+
+    const [products, totalItems] = await query.getManyAndCount();
+    const totalPages = Math.ceil(totalItems / limit);
+
+    return { products, totalItems, totalPages, currentPage: page };
   }
 
   // Método para buscar um produto pelo ID
@@ -113,6 +125,19 @@ export class ProductService {
     } catch (error) {
       console.error('Erro ao criar produto:', error.message);
       throw new Error('Erro ao criar produto: ' + error.message);
+    }
+  }
+
+  async importProducts(products: CreateProductDto[]): Promise<void> {
+    for (const productData of products) {
+      try {
+        await this.create(productData);
+      } catch (error) {
+        console.error(
+          `Erro ao importar produto: ${productData.name}`,
+          error.message,
+        );
+      }
     }
   }
 
