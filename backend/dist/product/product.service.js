@@ -26,7 +26,7 @@ let ProductService = class ProductService {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }
-    async findAll(filters, limit) {
+    async findAll(filters, page = 1, limit = 10) {
         const query = this.productRepository
             .createQueryBuilder('product')
             .leftJoinAndSelect('product.category', 'category');
@@ -43,10 +43,11 @@ let ProductService = class ProductService {
                 query.andWhere('product.price <= :price', { price: filters.price });
             }
         }
-        if (limit) {
-            query.limit(limit);
-        }
-        return query.getMany();
+        const skip = (page - 1) * limit;
+        query.skip(skip).take(limit);
+        const [products, totalItems] = await query.getManyAndCount();
+        const totalPages = Math.ceil(totalItems / limit);
+        return { products, totalItems, totalPages, currentPage: page };
     }
     async findOne(id) {
         return this.productRepository.findOne({
@@ -96,6 +97,16 @@ let ProductService = class ProductService {
         catch (error) {
             console.error('Erro ao criar produto:', error.message);
             throw new Error('Erro ao criar produto: ' + error.message);
+        }
+    }
+    async importProducts(products) {
+        for (const productData of products) {
+            try {
+                await this.create(productData);
+            }
+            catch (error) {
+                console.error(`Erro ao importar produto: ${productData.name}`, error.message);
+            }
         }
     }
     async update(id, updateData) {

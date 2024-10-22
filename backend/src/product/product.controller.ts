@@ -25,9 +25,10 @@ export class ProductController {
   @Get()
   async findAll(
     @Query() filters: Partial<Product>,
-    @Query('limit') limit?: number,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
   ) {
-    return this.productService.findAll(filters, limit);
+    return this.productService.findAll(filters, page, limit);
   }
 
   @Get(':id')
@@ -43,6 +44,12 @@ export class ProductController {
   ) {
     const parsedProductData: CreateProductDto = JSON.parse(productData);
     return this.productService.create(parsedProductData, image);
+  }
+
+  @Post('import')
+  @UseGuards(JwtAuthGuard)
+  async importProducts(@Body() products: CreateProductDto[]) {
+    return this.productService.importProducts(products);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -21,8 +21,8 @@ let ProductController = class ProductController {
     constructor(productService) {
         this.productService = productService;
     }
-    async findAll(filters, limit) {
-        return this.productService.findAll(filters, limit);
+    async findAll(filters, page = 1, limit = 10) {
+        return this.productService.findAll(filters, page, limit);
     }
     async findOne(id) {
         return this.productService.findOne(id);
@@ -30,6 +30,9 @@ let ProductController = class ProductController {
     async create(productData, image) {
         const parsedProductData = JSON.parse(productData);
         return this.productService.create(parsedProductData, image);
+    }
+    async importProducts(products) {
+        return this.productService.importProducts(products);
     }
     async update(id, updateData) {
         return this.productService.update(id, updateData);
@@ -47,9 +50,10 @@ exports.ProductController = ProductController;
 __decorate([
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)()),
-    __param(1, (0, common_1.Query)('limit')),
+    __param(1, (0, common_1.Query)('page')),
+    __param(2, (0, common_1.Query)('limit')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Number]),
+    __metadata("design:paramtypes", [Object, Number, Number]),
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "findAll", null);
 __decorate([
@@ -68,6 +72,14 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "create", null);
+__decorate([
+    (0, common_1.Post)('import'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", Promise)
+], ProductController.prototype, "importProducts", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Patch)(':id'),

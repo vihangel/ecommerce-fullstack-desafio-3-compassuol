@@ -5,7 +5,8 @@ import { ThemeProvider } from 'styled-components';
 import AppBar from './components/AppBar';
 import Footer from './components/Footer';
 import HomePage from './pages/home/HomePage';
-import ProductsPage from './pages/ProductsPage';
+
+import ShopPage from './pages/shop/ShopPage';
 import GlobalStyles from './styles/GlobalStyles';
 import { theme } from './styles/theme';
 
@@ -17,7 +18,7 @@ const App: React.FC = () => {
         <AppBar />
         <Routes>
           <Route path="/" element={<HomePage />} />
-<Route path="/shop" element={<ProductsPage />} />
+<Route path="/shop" element={<ShopPage />} />
         </Routes>
         <Footer></Footer>
       </Router>
