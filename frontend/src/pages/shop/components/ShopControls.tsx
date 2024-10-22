@@ -13,6 +13,7 @@ import ListIcon from "../../../assets/icons/ic_list.svg";
 interface ShopControlsProps {
   currentPage: number;
   totalPages: number;
+  totalItems: number;
   itemsPerPage: number;
   setItemsPerPage: (value: number) => void;
   handlePageChange: (page: number) => void;
@@ -21,31 +22,34 @@ interface ShopControlsProps {
 const ShopControls: React.FC<ShopControlsProps> = ({
   currentPage,
   totalPages,
+  totalItems,
   itemsPerPage,
   setItemsPerPage,
 }) => {
   return (
-    <>
-      <ControlsWrapper>
-        <Container>
+    <ControlsSection>
+      {" "}
+      <Container>
+        {" "}
+        <ControlsWrapper>
           <LeftControls>
             <FilterButton>
-              <Icon src={FilterIcon} alt="Filter Icon" />
+              <img src={FilterIcon} alt="Filter" />
               Filter
             </FilterButton>
             <ViewToggle>
               <ViewIcon active>
-                <Icon src={GridIcon} alt="Grid Icon" />
+                <img src={GridIcon} alt="Grid View" />
               </ViewIcon>
               <ViewIcon>
-                <Icon src={ListIcon} alt="List Icon" />
+                <img src={ListIcon} alt="List View" />
               </ViewIcon>
             </ViewToggle>
             <Separator />
             <ResultsText>
               Showing {(currentPage - 1) * itemsPerPage + 1}–
-              {Math.min(currentPage * itemsPerPage, totalPages * itemsPerPage)}{" "}
-              of {totalPages * itemsPerPage} results
+              {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems}{" "}
+              results
             </ResultsText>
           </LeftControls>
           <RightControls>
@@ -58,25 +62,19 @@ const ShopControls: React.FC<ShopControlsProps> = ({
             <SortByLabel>Sort by</SortByLabel>
             <SortBySelect>
               <option value="default">Default</option>
-              <option value="price-asc">Price: Low to High</option>
-              <option value="price-desc">Price: High to Low</option>
-              <option value="newest">Newest</option>
             </SortBySelect>
-          </RightControls>
-        </Container>
-      </ControlsWrapper>
-    </>
+          </RightControls>{" "}
+        </ControlsWrapper>
+      </Container>
+    </ControlsSection>
   );
 };
 
 export default ShopControls;
-
-// Styled Components
-const Icon = styled.img`
-  width: 1.5rem;
-  height: 1.5rem;
+const ControlsSection = styled.section`
+  background-color: #f9f1e7;
+  width: 100%;
 `;
-
 const ControlsWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -179,29 +177,5 @@ const SortBySelect = styled.select`
   &:focus {
     outline: none;
     border-color: ${theme.colors.primary};
-  }
-`;
-
-const PaginationWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 2rem 0;
-`;
-
-const PageButton = styled.button<{ active?: boolean }>`
-  background: ${(props) =>
-    props.active ? theme.colors.accent : theme.colors.background};
-  color: ${(props) => (props.active ? theme.colors.white : theme.colors.text)};
-  font-size: 1rem;
-  padding: 0.5rem 1rem;
-  border: none;
-  cursor: pointer;
-  border-radius: 0.25rem;
-
-  &:hover {
-    background: ${theme.colors.primary};
-    color: ${theme.colors.white};
   }
 `;

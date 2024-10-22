@@ -25,8 +25,8 @@ export class ProductController {
   @Get()
   async findAll(
     @Query() filters: Partial<Product>,
-    @Query('page') page: number = 1, // Valor padrão da página é 1
-    @Query('limit') limit: number = 10, // Valor padrão do limite é 10
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
   ) {
     return this.productService.findAll(filters, page, limit);
   }

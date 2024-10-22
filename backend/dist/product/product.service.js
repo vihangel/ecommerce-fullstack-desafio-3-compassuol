@@ -43,9 +43,6 @@ let ProductService = class ProductService {
                 query.andWhere('product.price <= :price', { price: filters.price });
             }
         }
-        if (limit) {
-            query.limit(limit);
-        }
         const skip = (page - 1) * limit;
         query.skip(skip).take(limit);
         const [products, totalItems] = await query.getManyAndCount();

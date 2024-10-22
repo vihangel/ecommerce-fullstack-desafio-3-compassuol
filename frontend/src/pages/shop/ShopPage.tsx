@@ -13,33 +13,37 @@ import ShopHero from "./components/ShopHero";
 const ShopPage: React.FC = () => {
   const useMockData = false;
 
-  const [products, setProducts] = useState(mockProducts);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState<boolean>(!useMockData);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(16);
-  const [totalPages, setTotalPages] = useState<number>(3); // Supondo 3 páginas no total para exemplo
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [totalItems, setTotalItems] = useState<number>(0);
 
-  useEffect(() => {
+  // Função para buscar produtos, acionada sempre que currentPage ou itemsPerPage mudarem
+  const fetchProducts = () => {
     if (useMockData) {
       setLoading(true);
       setTimeout(() => {
-        setProducts(mockProducts);
-        setTotalPages(Math.ceil(mockProducts.length / itemsPerPage));
-        setLoading(false);
+        // Mock data handling
       }, 2000);
     } else {
       setLoading(true);
       setError(null);
+
       axios
-        .get(
-          `http://localhost:3000/products?_page=${currentPage}&_limit=${itemsPerPage}`
-        )
+        .get(`http://localhost:3000/products`, {
+          params: {
+            page: currentPage,
+            limit: itemsPerPage,
+          },
+        })
         .then((response) => {
-          setProducts(response.data);
-          // Assumindo que o servidor retorna um cabeçalho "X-Total-Count"
-          const totalItems = parseInt(response.headers["x-total-count"]);
-          setTotalPages(Math.ceil(totalItems / itemsPerPage));
+          const { products, totalItems, totalPages } = response.data;
+          setProducts(products);
+          setTotalItems(totalItems);
+          setTotalPages(totalPages);
         })
         .catch((error) => {
           console.error("Erro ao buscar produtos:", error);
@@ -51,8 +55,20 @@ const ShopPage: React.FC = () => {
           setLoading(false);
         });
     }
-  }, [useMockData, currentPage, itemsPerPage]);
+  };
 
+  // Atualizar os produtos sempre que currentPage ou itemsPerPage mudarem
+  useEffect(() => {
+    fetchProducts();
+  }, [currentPage, itemsPerPage, currentPage]);
+
+  // Função para alterar o número de itens por página
+  const handleItemsPerPageChange = (value: number) => {
+    setItemsPerPage(value);
+    setCurrentPage(1);
+  };
+
+  // Função para alterar a página atual
   const handlePageChange = (page: number) => {
     if (page > 0 && page <= totalPages) {
       setCurrentPage(page);
@@ -63,13 +79,13 @@ const ShopPage: React.FC = () => {
     <Main>
       <ShopHero />
       <ShopControls
-        currentPage={1}
-        totalPages={10}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalItems={totalItems}
         itemsPerPage={itemsPerPage}
-        setItemsPerPage={setItemsPerPage}
+        setItemsPerPage={handleItemsPerPageChange}
         handlePageChange={handlePageChange}
       />
-
       {loading ? (
         <LoadingMessage>Carregando produtos...</LoadingMessage>
       ) : error ? (
@@ -77,6 +93,7 @@ const ShopPage: React.FC = () => {
       ) : (
         <>
           <ProductSection title="Our Products" products={products} />
+
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
@@ -84,8 +101,6 @@ const ShopPage: React.FC = () => {
           />
         </>
       )}
-
-      {/* Pagination */}
       <FeatureSection />
     </Main>
   );

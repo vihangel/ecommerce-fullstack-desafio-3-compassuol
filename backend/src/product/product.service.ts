@@ -33,6 +33,7 @@ export class ProductService {
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.category', 'category');
 
+    // Aplicando filtros, se houver
     if (filters) {
       if (filters.category?.id) {
         query.andWhere('product.category.id = :categoryId', {
@@ -45,16 +46,14 @@ export class ProductService {
       if (filters.price) {
         query.andWhere('product.price <= :price', { price: filters.price });
       }
-      // Adicione outros filtros conforme necessário
+      // Outros filtros podem ser adicionados aqui
     }
 
-    if (limit) {
-      query.limit(limit);
-    }
-
+    // Corrigindo a aplicação de paginação
     const skip = (page - 1) * limit;
     query.skip(skip).take(limit);
 
+    // Obtendo os produtos e o total de itens
     const [products, totalItems] = await query.getManyAndCount();
     const totalPages = Math.ceil(totalItems / limit);
 

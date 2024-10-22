@@ -16,7 +16,7 @@ const Pagination: React.FC<PaginationProps> = ({
   totalPages,
   onPageChange,
 }) => {
-  if (totalPages <= 1) return null; // Não renderizar se houver apenas uma página
+  if (totalPages <= 1) return null;
 
   return (
     <PaginationWrapper>
@@ -52,11 +52,13 @@ const PaginationWrapper = styled.div`
   align-items: center;
   gap: 0.5rem;
   padding: 2rem 0;
+  background-color: ${theme.colors.white};
+  width: 100%;
 `;
 
 const PageButton = styled.button<{ active?: boolean }>`
   background: ${(props) =>
-    props.active ? theme.colors.accent : theme.colors.background};
+    props.active ? theme.colors.primary : theme.colors.background};
   color: ${(props) => (props.active ? theme.colors.white : theme.colors.text)};
   font-size: 1rem;
   padding: 0.5rem 1rem;
@@ -65,7 +67,7 @@ const PageButton = styled.button<{ active?: boolean }>`
   border-radius: 0.25rem;
 
   &:hover {
-    background: ${theme.colors.primary};
+    background: ${theme.colors.accent};
     color: ${theme.colors.white};
   }
 `;
