@@ -1,123 +1,84 @@
+# Ecommerce de Móveis Fullstack para o Desafio da Compass
+
+Este projeto é um e-commerce de móveis fullstack desenvolvido como parte do desafio da Compass. Ele consiste em um back-end construído em NestJS e um front-end em React, proporcionando uma plataforma completa para a compra e gestão de móveis.
+
+<h2 align="center">Tecnologias 💻</h2>
+<br>
+<p align='center'>
+    <img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" />&nbsp;&nbsp;
+    <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" />&nbsp;&nbsp;
+    <img src="https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white" />&nbsp;&nbsp;
+    <img src="https://img.shields.io/badge/PostgreSQL-336791?style=for-the-badge&logo=postgresql&logoColor=white" />&nbsp;&nbsp;
+    <img src="https://img.shields.io/badge/Cloudinary-232F3E?style=for-the-badge&logo=cloudinary&logoColor=white" />&nbsp;&nbsp;
+    <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black" />&nbsp;&nbsp;
+    <img src="https://img.shields.io/badge/Styled--Components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white" />&nbsp;&nbsp;
+</p>
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Funcionalidades do Backend
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- **Autenticação JWT**: As rotas protegidas utilizam autenticação JWT para garantir segurança.
+- **CRUD de Produtos**: Gerenciamento completo dos produtos do e-commerce, incluindo a possibilidade de importação em massa.
+- **Gestão de Categorias**: Relacionamento entre produtos e categorias, permitindo organizar os itens da loja.
+- **Upload de Imagens**: Integração com Cloudinary para armazenar imagens dos produtos de forma eficiente.
+- **Paginação**: As rotas de listagem de produtos oferecem paginação opcional para facilitar a navegação.
+- **Gestão de Newsletter**: Envio de newsletters e registro de logs dos envios realizados.
+- **Criptografia de Senha**: As senhas dos usuários são armazenadas de forma segura utilizando criptografia.
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
+## Configuração do Projeto
 
 ```bash
 $ yarn install
 ```
 
-## Compile and run the project
+## Compilar e executar o projeto
 
 ```bash
-# development
+# modo desenvolvimento
 $ yarn run start
 
-# watch mode
 $ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
 ```
 
-## Run tests
+## Recursos
 
-```bash
-# unit tests
-$ yarn run test
+Confira alguns recursos úteis ao trabalhar com NestJS:
 
-# e2e tests
-$ yarn run test:e2e
+- Visite a [Documentação do NestJS](https://docs.nestjs.com) para saber mais sobre o framework.
+- Para perguntas e suporte, visite nosso [canal no Discord](https://discord.gg/G7Qnnhy).
+- Veja [cursos oficiais](https://courses.nestjs.com/) para se aprofundar e obter mais experiência prática.
+- Visualize o grafo de sua aplicação e interaja em tempo real usando o [NestJS Devtools](https://devtools.nestjs.com).
+- Para suporte empresarial, veja nosso [Enterprise Support](https://enterprise.nestjs.com).
 
-# test coverage
-$ yarn run test:cov
-```
+## Rotas do Backend
 
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
-
-# TODO - LIST
-
--[] Criptografia de senha
--[] Role de
-
-### Rotas do Backend
-
-#### **Produtos (`/products`)**
+### **Produtos (`/products`)**
 
 1. **GET `/products`** - Lista todos os produtos. Esta rota é pública e pode ser acessada por qualquer usuário.
 2. **GET `/products/:id`** - Busca um produto específico pelo seu ID. Esta rota é pública.
+3. **POST `/products`** - Cria um novo produto. Esta rota é protegida e exige autenticação.
+4. **PATCH `/products/:id`** - Atualiza parcialmente um produto existente. Esta rota é protegida.
+5. **DELETE `/products/:id`** - Remove um produto existente. Esta rota é protegida.
+6. **POST `/products/import`** - Importa produtos a partir de uma lista em JSON. Esta rota é protegida.
 
-3. **GET `/products/filter`** - Busca produtos de acordo com critérios de filtro específicos. Esta rota é pública.
+### **Categorias (`/categories`)**
 
-4. **POST `/products`** - Cria um novo produto. Esta rota é protegida, exigindo autenticação (usuários autenticados).
+1. **GET `/categories`** - Lista todas as categorias. Esta rota é pública.
+2. **POST `/categories`** - Cria uma nova categoria. Esta rota é protegida e exige autenticação.
+3. **PATCH `/categories/:id`** - Atualiza uma categoria existente. Esta rota é protegida.
+4. **DELETE `/categories/:id`** - Remove uma categoria existente. Esta rota é protegida.
 
-5. **PATCH `/products/:id`** - Atualiza parcialmente um produto existente. Esta rota é protegida.
-
-6. **DELETE `/products/:id`** - Remove um produto existente. Esta rota é protegida.
-
-#### **Categorias (`/categories`)**
-
-- Não foi mencionado diretamente o CRUD para categorias, mas existe uma relação direta com os produtos, sendo possível listar produtos por categoria através das relações implementadas.
-
-#### **Usuários (`/users`)**
+### **Usuários (`/users`)**
 
 1. **POST `/users`** - Cria um novo usuário. Esta rota é protegida por autenticação e é feita para permitir que apenas usuários autorizados possam adicionar novos usuários.
 2. **GET `/users/:id`** - Busca um usuário específico pelo ID. Esta rota é protegida, necessitando autenticação.
-
 3. **PATCH `/users/:id`** - Atualiza parcialmente um usuário existente. Esta rota é protegida.
-
 4. **DELETE `/users/:id`** - Remove um usuário específico. Esta rota é protegida.
 
-#### **Newsletter (`/newsletter`)**
+### **Newsletter (`/newsletter`)**
 
 1. **POST `/newsletter/send`** - Envia um email de newsletter para um usuário. Utiliza a integração com o SendGrid e armazena logs dos emails enviados em uma tabela no banco de dados.
 
@@ -129,43 +90,44 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 - **`name` (string)**: Nome do produto (até 50 caracteres).
 - **`sku` (string)**: Código SKU do produto (até 10 caracteres).
 - **`category_id` (number)**: ID da categoria do produto.
-- **`category` (Category)**: Relação `ManyToOne` com a entidade `Category`.
 - **`description` (string)**: Descrição curta do produto (até 250 caracteres).
 - **`large_description` (string)**: Descrição detalhada do produto (até 500 caracteres).
 - **`price` (decimal)**: Preço do produto.
 - **`discount_price` (decimal, nullable)**: Preço com desconto (opcional).
-- **`discount_percent` (int, nullable)**: Percentual de desconto (opcional).
 - **`is_new` (boolean)**: Indica se o produto é um lançamento.
-- **`image_data` (bytea, nullable)**: Imagem do produto em formato binário (opcional).
+- **`image_url` (string, nullable)**: URL da imagem do produto (opcional).
 - **`created_date` (timestamp)**: Data de criação do produto.
 - **`updated_date` (timestamp)**: Data de última atualização do produto.
 
-#### **Categoria (`Category`)**
-
-- **`id` (number)**: ID único da categoria.
-- **`name` (string)**: Nome da categoria (até 50 caracteres).
-- **`products` (Product[])**: Relação `OneToMany` com a entidade `Product`.
-
-#### **Usuário (`User`)**
-
-- **`id` (number)**: ID único do usuário.
-- **`username` (string)**: Nome de usuário (único).
-- **`password` (string)**: Senha do usuário (armazenada de forma criptografada).
-- **`refreshToken` (string, nullable)**: Refresh token associado ao usuário para controle de sessões (opcional).
-
-#### **Newsletter Log (`NewsletterLog`)**
-
-- **`id` (number)**: ID único do log.
-- **`to` (string)**: Email do destinatário.
-- **`subject` (string, nullable)**: Assunto do email (opcional).
-- **`content` (string, nullable)**: Conteúdo do email enviado (opcional).
-- **`sentAt` (Date)**: Data em que o email foi enviado.
-- **`status` (string)**: Status do envio do email (`SENT` ou `FAILED`).
-- **`error` (string, nullable)**: Mensagem de erro em caso de falha no envio do email (opcional).
-
 ### Considerações Gerais
 
-- As rotas para **produtos** e **usuários** são implementadas com autenticação e autorização adequadas, utilizando o `JwtAuthGuard` para proteger rotas que exigem acesso autenticado.
-- A entidade **usuário** possui senhas armazenadas de forma hashada usando **bcrypt**, para garantir a segurança das informações.
-- As integrações com o **SendGrid** permitem o envio de emails para os usuários, e o registro dos envios está sendo mantido para controle e monitoramento.
-- Algumas rotas possuem permissões públicas para facilitar o acesso dos clientes (como listar produtos), enquanto operações sensíveis (criação, atualização, exclusão) exigem autenticação.
+- As rotas para **produtos**, **categorias**, e **usuários** são implementadas com autenticação e autorização, utilizando o `JwtAuthGuard` para proteger rotas que exigem acesso autenticado.
+- O upload de imagens de produtos é feito por integração com o **Cloudinary**, permitindo armazenar e acessar as imagens de forma segura.
+
+## Funcionalidades do Frontend
+
+O frontend do projeto é desenvolvido em React e Styled Components, criando uma interface visual atraente e responsiva para os usuários. As principais funcionalidades do front-end incluem:
+
+- **Página Inicial**: Exibe os destaques e as melhores ofertas de produtos.
+- **Listagem de Produtos**: Página que lista todos os produtos disponíveis, com filtros e paginação para melhorar a navegação.
+- **Detalhes do Produto**: Visualização detalhada de um produto selecionado, exibindo imagens, descrições e preços.
+
+### Rotas Disponíveis no Frontend
+
+1. **`/`** - Página inicial.
+2. **`/shop`** - Lista todos os produtos com possibilidade de filtro e ordenação.
+3. **`/shop/:id`** - Página de detalhes de um produto específico.
+
+### Funcionalidades a Desenvolver
+
+- **Carrinho de Compras**: Adicionar produtos ao carrinho e gerenciar o status dos itens.
+- **Login Admin**: Interface para administração e gerenciamento de produtos e categorias.
+- **Checkout**: Finalização de compras, com formulário de envio e resumo do pedido.
+
+### Tecnologias Utilizadas no Frontend
+
+- **React**: Biblioteca JavaScript para construção de interfaces de usuário.
+- **Styled Components**: Biblioteca para estilização de componentes de forma dinâmica.
+- **Axios**: Utilizado para fazer requisições ao backend.
+- **React Router**: Para navegação entre as páginas do front-end.
+
