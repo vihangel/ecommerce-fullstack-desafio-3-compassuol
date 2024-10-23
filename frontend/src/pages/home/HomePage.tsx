@@ -97,7 +97,7 @@ const ErrorMessage = styled.p`
 
 // Styled Components
 const Main = styled.main`
-  padding-top: 100px; /* Para garantir que o conteúdo não fique atrás da AppBar */
+  padding-top: 100px;
 `;
 
 const HeroSection = styled.section`
