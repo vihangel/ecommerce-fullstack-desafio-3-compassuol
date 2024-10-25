@@ -68,6 +68,7 @@ export class ProductService {
     });
   }
 
+  // Método para criar um produto
   async create(
     productData: CreateProductDto,
     image?: Express.Multer.File,
@@ -85,29 +86,22 @@ export class ProductService {
       }
 
       const newProduct = this.productRepository.create({
-        name: productData.name,
-        sku: productData.sku,
-        description: productData.description,
-        large_description: productData.large_description,
-        price: productData.price,
-        discount_price: productData.discount_price,
-        discount_percent: productData.discount_percent,
-        is_new: productData.is_new,
+        ...productData,
+        category: { id: productData.category_id } as any,
         created_date: new Date(),
         updated_date: new Date(),
-        category: { id: productData.category_id } as any,
       });
 
       const savedProduct = await this.productRepository.save(newProduct);
 
-      // Upload da imagem para o Cloudinary
+      // Se a imagem for enviada como arquivo, faça upload no Cloudinary
       if (image) {
         try {
           const result = await cloudinary.uploader.upload(image.path, {
             folder: 'products',
             public_id: `product_${savedProduct.id}`,
           });
-          savedProduct.image_url = result.secure_url;
+          savedProduct.cover_image_url = result.secure_url;
           await this.productRepository.save(savedProduct);
         } catch (error) {
           console.error(
@@ -118,6 +112,10 @@ export class ProductService {
             'Erro ao salvar a imagem no Cloudinary: ' + error.message,
           );
         }
+      } else if (productData.cover_image_url) {
+        // Se uma URL for fornecida diretamente no productData, use-a como a imagem de capa
+        savedProduct.cover_image_url = productData.cover_image_url;
+        await this.productRepository.save(savedProduct);
       }
 
       return savedProduct;
@@ -146,6 +144,11 @@ export class ProductService {
     updateData: Partial<CreateProductDto>,
   ): Promise<Product> {
     const product = await this.findOne(id);
+    if (!product) {
+      throw new NotFoundException(`Produto com ID ${id} não encontrado.`);
+    }
+
+    // Atualizando o produto com os novos dados
     const updatedProduct = Object.assign(product, updateData, {
       updated_date: new Date(),
     });
@@ -159,20 +162,22 @@ export class ProductService {
 
     return this.productRepository.save(updatedProduct);
   }
-
   // Método para remover um produto pelo ID
+
   async remove(id: number): Promise<void> {
     const product = await this.findOne(id);
-
     if (!product) {
       throw new NotFoundException(`Produto com ID ${id} não encontrado.`);
     }
 
     // Remove a imagem associada do Cloudinary se existir
-    if (product.image_url) {
+    if (product.cover_image_url) {
       try {
         // Extrair o public_id a partir da URL da imagem armazenada no Cloudinary
-        const publicId = product.image_url.split('/').pop()?.split('.')[0]; // Pega o último trecho da URL e remove a extensão
+        const publicId = product.cover_image_url
+          .split('/')
+          .pop()
+          ?.split('.')[0];
         if (publicId) {
           await cloudinary.uploader.destroy(`products/${publicId}`);
         }
@@ -192,25 +197,8 @@ export class ProductService {
     // Buscar todos os produtos
     const products = await this.productRepository.find();
 
-    // Remover cada imagem associada do Cloudinary
     for (const product of products) {
-      if (product.image_url) {
-        try {
-          // Extrair o public_id a partir da URL da imagem armazenada no Cloudinary
-          const publicId = product.image_url.split('/').pop()?.split('.')[0]; // Pega o último trecho da URL e remove a extensão
-          if (publicId) {
-            await cloudinary.uploader.destroy(`products/${publicId}`);
-          }
-        } catch (error) {
-          console.error(
-            'Erro ao remover a imagem do Cloudinary:',
-            error.message,
-          );
-        }
-      }
+      await this.remove(product.id);
     }
-
-    // Remover todos os produtos do banco de dados
-    await this.productRepository.clear();
   }
 }

@@ -16,6 +16,7 @@ const category_module_1 = require("./category/category.module");
 const category_model_1 = require("./models/category.model");
 const newsletter_model_1 = require("./models/newsletter.model");
 const product_model_1 = require("./models/product.model");
+const review_model_1 = require("./models/review.model");
 const user_model_1 = require("./models/user.model");
 const newsletter_module_1 = require("./newsletter/newsletter.module");
 const product_module_1 = require("./product/product.module");
@@ -38,7 +39,7 @@ exports.AppModule = AppModule = __decorate([
                     username: process.env.DB_USER,
                     password: process.env.DB_PASSWORD,
                     database: process.env.DB_NAME,
-                    entities: [product_model_1.Product, category_model_1.Category, user_model_1.User, newsletter_model_1.NewsletterLog],
+                    entities: [product_model_1.Product, category_model_1.Category, user_model_1.User, newsletter_model_1.NewsletterLog, review_model_1.Review],
                     synchronize: true,
                 }),
             }),

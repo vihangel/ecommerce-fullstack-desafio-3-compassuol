@@ -1,5 +1,12 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Category } from './category.model';
+import { Review } from './review.model';
 
 @Entity()
 export class Product {
@@ -25,7 +32,7 @@ export class Product {
   price: number;
 
   @Column('decimal', { nullable: true })
-  discount_price?: number; // Adicionando a propriedade `discount_price`
+  discount_price?: number;
 
   @Column('int', { nullable: true })
   discount_percent?: number;
@@ -33,11 +40,26 @@ export class Product {
   @Column('boolean', { default: true })
   is_new: boolean;
 
-  @Column('bytea', { nullable: true }) // Campo para armazenar a imagem em binário (usando bytea no PostgreSQL)
-  image_data?: Buffer;
+  @Column('text', { array: true, nullable: true })
+  sizes?: string[];
+
+  @Column('jsonb', { nullable: true })
+  colors?: { name: string; image_url: string }[];
+
+  @Column('text', { array: true, nullable: true })
+  tags?: string[];
+
+  @Column({ type: 'text', nullable: true })
+  additional_information?: string;
+
+  @OneToMany(() => Review, (review) => review.product)
+  reviews: Review[];
 
   @Column({ nullable: true })
-  image_url: string;
+  cover_image_url: string; // Adicionando campo image_url
+
+  @Column('text', { array: true, nullable: true })
+  gallery_images?: string[];
 
   @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
   created_date: Date;
