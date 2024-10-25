@@ -8,7 +8,32 @@
         "price": 2500000,
         "discount_price": 2000000,
         "discount_percent": 20,
-        "is_new": false
+        "is_new": false,
+        "sizes": [
+            "S",
+            "M",
+            "L"
+        ],
+        "colors": [
+            {
+                "name": "Blue",
+                "image_url": "https://images.pexels.com/photos/12708005/pexels-photo-12708005.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+            },
+            {
+                "name": "Black",
+                "image_url": "https://images.pexels.com/photos/2082090/pexels-photo-2082090.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+            }
+        ],
+        "tags": [
+            "Modern",
+            "Cafe",
+            "Stylish"
+        ],
+        "additional_information": "Made from sustainable wood, comes with a 2-year warranty.",
+        "cover_image_url": "https://asset.cloudinary.com/degnvmueo/0f4d4752536714105a58aefc138ce757",
+        "gallery_images": [
+            "https://images.pexels.com/photos/15259572/pexels-photo-15259572/free-photo-of-banquinho-tamborete-sala-quarto.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+        ]
     },
     {
         "name": "Leviosa",
@@ -19,7 +44,32 @@
         "price": 7000000,
         "discount_price": 6000000,
         "discount_percent": 15,
-        "is_new": false
+        "is_new": false,
+        "sizes": [
+            "L",
+            "XL"
+        ],
+        "colors": [
+            {
+                "name": "Gray",
+                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282498/products/product_91_gray.png"
+            },
+            {
+                "name": "Beige",
+                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282498/products/product_91_beige.png"
+            }
+        ],
+        "tags": [
+            "Comfortable",
+            "Family",
+            "Luxury"
+        ],
+        "additional_information": "Includes 4 soft pillows, easy to clean fabric.",
+        "cover_image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282498/products/product_91.png",
+        "gallery_images": [
+            "https://res.cloudinary.com/degnvmueo/image/upload/v1729282498/products/product_91_front.png",
+            "https://res.cloudinary.com/degnvmueo/image/upload/v1729282498/products/product_91_closeup.png"
+        ]
     },
     {
         "name": "Lolito",
@@ -30,7 +80,31 @@
         "price": 500000,
         "discount_price": 450000,
         "discount_percent": 10,
-        "is_new": false
+        "is_new": false,
+        "sizes": [
+            "Standard"
+        ],
+        "colors": [
+            {
+                "name": "Brown",
+                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282499/products/product_92_brown.png"
+            },
+            {
+                "name": "Green",
+                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282499/products/product_92_green.png"
+            }
+        ],
+        "tags": [
+            "Outdoor",
+            "Bar",
+            "Durable"
+        ],
+        "additional_information": "Weather-resistant material, 1-year warranty included.",
+        "cover_image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282499/products/product_92.png",
+        "gallery_images": [
+            "https://res.cloudinary.com/degnvmueo/image/upload/v1729282499/products/product_92_top.png",
+            "https://res.cloudinary.com/degnvmueo/image/upload/v1729282499/products/product_92_seat.png"
+        ]
     },
     {
         "name": "Muggo",
@@ -39,7 +113,30 @@
         "description": "Small mug",
         "large_description": "Perfect for coffee or tea, with a minimalist design.",
         "price": 150000,
-        "is_new": true
+        "is_new": true,
+        "sizes": [
+            "Standard"
+        ],
+        "colors": [
+            {
+                "name": "White",
+                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282500/products/product_93_white.png"
+            },
+            {
+                "name": "Red",
+                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282500/products/product_93_red.png"
+            }
+        ],
+        "tags": [
+            "Mug",
+            "Minimalist",
+            "Ceramic"
+        ],
+        "additional_information": "Dishwasher safe, holds up to 300ml.",
+        "cover_image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282500/products/product_93.png",
+        "gallery_images": [
+            "https://res.cloudinary.com/degnvmueo/image/upload/v1729282500/products/product_93_side.png"
+        ]
     },
     {
         "name": "Respira",
@@ -50,7 +147,31 @@
         "price": 1500000,
         "discount_price": 1200000,
         "discount_percent": 20,
-        "is_new": false
+        "is_new": false,
+        "sizes": [
+            "Standard"
+        ],
+        "colors": [
+            {
+                "name": "White",
+                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282501/products/product_94_white.png"
+            },
+            {
+                "name": "Warm Yellow",
+                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282501/products/product_94_warm_yellow.png"
+            }
+        ],
+        "tags": [
+            "Lamp",
+            "Bedroom",
+            "Soft Light"
+        ],
+        "additional_information": "LED bulb included, adjustable brightness.",
+        "cover_image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282501/products/product_94.png",
+        "gallery_images": [
+            "https://res.cloudinary.com/degnvmueo/image/upload/v1729282501/products/product_94_side.png",
+            "https://res.cloudinary.com/degnvmueo/image/upload/v1729282501/products/product_94_closeup.png"
+        ]
     },
     {
         "name": "Grifo",
@@ -59,7 +180,31 @@
         "description": "Stylish lamp",
         "large_description": "Stylish modern lamp with a sleek design, great for living rooms or bedrooms.",
         "price": 1500000,
-        "is_new": false
+        "is_new": false,
+        "sizes": [
+            "Standard"
+        ],
+        "colors": [
+            {
+                "name": "Black",
+                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282502/products/product_95_black.png"
+            },
+            {
+                "name": "Matte Gray",
+                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282502/products/product_95_gray.png"
+            }
+        ],
+        "tags": [
+            "Lamp",
+            "Modern",
+            "Living Room"
+        ],
+        "additional_information": "Made of metal, compatible with smart light bulbs.",
+        "cover_image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282502/products/product_95.png",
+        "gallery_images": [
+            "https://res.cloudinary.com/degnvmueo/image/upload/v1729282502/products/product_95_front.png",
+            "https://res.cloudinary.com/degnvmueo/image/upload/v1729282502/products/product_95_detail.png"
+        ]
     },
     {
         "name": "Pingky",
@@ -70,7 +215,32 @@
         "price": 7000000,
         "discount_price": 5600000,
         "discount_percent": 20,
-        "is_new": false
+        "is_new": false,
+        "sizes": [
+            "Queen",
+            "King"
+        ],
+        "colors": [
+            {
+                "name": "Pink",
+                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_96_pink.png"
+            },
+            {
+                "name": "Light Blue",
+                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_96_light_blue.png"
+            }
+        ],
+        "tags": [
+            "Bed Set",
+            "Comfort",
+            "Bedroom"
+        ],
+        "additional_information": "Includes bedspread, 2 pillowcases, and a fitted sheet.",
+        "cover_image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_96.png",
+        "gallery_images": [
+            "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_96_side.png",
+            "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_96_closeup.png"
+        ]
     },
     {
         "name": "Potty",
@@ -81,6 +251,32 @@
         "price": 500000,
         "discount_price": 450000,
         "discount_percent": 10,
-        "is_new": true
+        "is_new": true,
+        "sizes": [
+            "Small",
+            "Medium",
+            "Large"
+        ],
+        "colors": [
+            {
+                "name": "White",
+                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_97_white.png"
+            },
+            {
+                "name": "Terracotta",
+                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_97_terracotta.png"
+            }
+        ],
+        "tags": [
+            "Flower Pot",
+            "Minimalist",
+            "Home Decor"
+        ],
+        "additional_information": "Drainage hole included, suitable for indoor and outdoor plants.",
+        "cover_image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_97.png",
+        "gallery_images": [
+            "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_97_side.png",
+            "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_97_closeup.png"
+        ]
     }
 ]

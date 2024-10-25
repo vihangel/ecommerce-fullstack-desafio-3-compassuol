@@ -5,26 +5,17 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Container from "../../components/shared/Container";
+import { Product } from "../../models/Product";
 import { theme } from "../../styles/theme";
-
-interface Product {
-  id: number;
-  name: string;
-  price: string;
-  discount_price: string | null;
-  description: string;
-  large_description: string;
-  category: { id: number; name: string };
-  image_url: string;
-  is_new: boolean;
-  discount_percent: number | null;
-}
+import TopBarDetails from "./components/TopBarDetails";
 
 const ProductDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [mainImage, setMainImage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -33,7 +24,10 @@ const ProductDetailsPage: React.FC = () => {
         const response = await axios.get(
           `http://localhost:3000/products/${id}`
         );
-        setProduct(response.data);
+        const productData = response.data;
+
+        setProduct(productData);
+        setMainImage(productData.cover_image_url);
       } catch (error) {
         setError("Erro ao buscar os detalhes do produto.");
       } finally {
@@ -56,28 +50,51 @@ const ProductDetailsPage: React.FC = () => {
     return <ErrorMessage>Produto não encontrado.</ErrorMessage>;
   }
 
+  // Função para alterar a imagem principal ao selecionar uma cor
+  const handleColorSelect = (colorImageUrl: string | undefined) => {
+    setMainImage(colorImageUrl || product.cover_image_url || null);
+    setSelectedColor(colorImageUrl || null);
+  };
+
   return (
     <Main>
+      <TopBarDetails productName={product.name} />
       <Container>
         <ProductWrapper>
           <ImageGallery>
-            <MainImage src={product.image_url} alt={product.name} />
             <ThumbnailGallery>
-              <Thumbnail src={product.image_url} alt={product.name} />
-              <Thumbnail src={product.image_url} alt={product.name} />
-              <Thumbnail src={product.image_url} alt={product.name} />
+              {/* Listagem da galeria de imagens e imagens associadas às cores */}
+              {product.gallery_images?.map((imageUrl, index) => (
+                <Thumbnail
+                  key={index}
+                  src={imageUrl || undefined}
+                  alt={`${product.name} - Imagem ${index + 1}`}
+                  onClick={() => setMainImage(imageUrl)}
+                />
+              ))}
+              {product.colors?.map((color, index) => (
+                <Thumbnail
+                  key={index}
+                  src={color.image_url || undefined}
+                  alt={`${product.name} - Cor ${color.name}`}
+                  onClick={() => handleColorSelect(color.image_url)}
+                />
+              ))}
             </ThumbnailGallery>
+            <MainImage src={mainImage || undefined} alt={product.name} />
           </ImageGallery>
           <ProductInfo>
             <h2>{product.name}</h2>
             <Price>
               {product.discount_price ? (
                 <>
-                  <span className="discounted">{product.discount_price}</span>
-                  <span className="original">{product.price}</span>
+                  <span className="discounted">
+                    {formatPrice(product.discount_price)}
+                  </span>
+                  <span className="original">{formatPrice(product.price)}</span>
                 </>
               ) : (
-                <span className="normal">{product.price}</span>
+                <span className="normal">{formatPrice(product.price)}</span>
               )}
             </Price>
             <p>{product.large_description}</p>
@@ -85,15 +102,19 @@ const ProductDetailsPage: React.FC = () => {
             <Options>
               <SizeSelector>
                 <span>Tamanho</span>
-                <SizeOption>L</SizeOption>
-                <SizeOption>XL</SizeOption>
-                <SizeOption>XS</SizeOption>
+                {product.sizes?.map((size, index) => (
+                  <SizeOption key={index}>{size}</SizeOption>
+                ))}
               </SizeSelector>
               <ColorSelector>
                 <span>Cor</span>
-                <ColorOption style={{ background: "#000000" }} />
-                <ColorOption style={{ background: "#8A2BE2" }} />
-                <ColorOption style={{ background: "#FFD700" }} />
+                {product.colors?.map((color, index) => (
+                  <ColorOption
+                    key={index}
+                    style={{ background: color.name }}
+                    onClick={() => handleColorSelect(color.image_url)}
+                  />
+                ))}
               </ColorSelector>
             </Options>
 
@@ -108,9 +129,9 @@ const ProductDetailsPage: React.FC = () => {
             </ActionButtons>
 
             <ProductMeta>
-              <p>SKU: {product.id}</p>
-              <p>Categoria: {product.category.name}</p>
-              <p>Tags: Sofá, Cadeira, Casa</p>
+              <p>SKU: {product.sku}</p>
+              <p>Categoria: {product.category?.name}</p>
+              <p>Tags: {product.tags?.join(", ") || "N/A"}</p>
             </ProductMeta>
           </ProductInfo>
         </ProductWrapper>
@@ -122,6 +143,7 @@ const ProductDetailsPage: React.FC = () => {
           </Tab>
           <DescriptionContent>
             <p>{product.description}</p>
+            <p>{product.additional_information}</p>
           </DescriptionContent>
         </DescriptionSection>
       </Container>
@@ -131,7 +153,21 @@ const ProductDetailsPage: React.FC = () => {
 
 export default ProductDetailsPage;
 
-// Componentes adicionais para feedback visual e estilização
+// Função auxiliar para formatar o preço
+const formatPrice = (price: string): string => {
+  return parseInt(price, 10).toLocaleString("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+  });
+};
+
+// Styled Components
+
+const Main = styled.main`
+  padding-top: 100px;
+`;
+
 const LoadingMessage = styled.p`
   text-align: center;
   font-size: 1.5rem;
@@ -146,200 +182,161 @@ const ErrorMessage = styled.p`
   color: ${theme.colors.accent};
 `;
 
-const Main = styled.main`
-  padding-top: 100px;
-`;
-
 const ProductWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1.5fr;
+  display: flex;
   gap: 2rem;
-  margin-bottom: 4rem;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
+  margin-bottom: 2rem;
+  padding-top: 35px;
 `;
 
 const ImageGallery = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  gap: 31px;
 `;
-
 const MainImage = styled.img`
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
+  width: 423px;
+  height: 500px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: ${theme.colors.primaryLight};
 `;
-
 const ThumbnailGallery = styled.div`
   display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
+  flex-direction: column;
+  gap: 0.5rem;
 `;
-
 const Thumbnail = styled.img`
-  width: 60px;
-  height: 60px;
-  border-radius: 4px;
+  width: 76px;
+  height: 80px;
   cursor: pointer;
   object-fit: cover;
+  border-radius: 10px;
+  background: ${theme.colors.primaryLight};
+  &:hover {
+    border-color: ${theme.colors.primary};
+  }
 `;
-
+const AddToCartButton = styled.button`
+  padding: 0.75rem 2rem;
+  background: transparent;
+  color: ${theme.colors.text};
+  border: 1px solid ${theme.colors.text};
+  cursor: pointer;
+  &:hover {
+    background: ${theme.colors.accent};
+    color: ${theme.colors.white};
+  }
+`;
+const CompareButton = styled.button`
+  padding: 0.75rem 2rem;
+  background: transparent;
+  color: ${theme.colors.text};
+  border: 1px solid ${theme.colors.text};
+  cursor: pointer;
+  &:hover {
+    background: ${theme.colors.accent};
+    color: ${theme.colors.white};
+  }
+`;
 const ProductInfo = styled.div`
-  h2 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-  }
-
-  p {
-    font-size: 1.125rem;
-    color: ${theme.colors.muted};
-  }
+  flex: 1;
 `;
 
 const Price = styled.div`
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-
+  margin: 1rem 0;
   .discounted {
     color: ${theme.colors.accent};
+    font-size: 1.5rem;
     font-weight: bold;
+    margin-right: 1rem;
   }
-
   .original {
     text-decoration: line-through;
-    margin-left: 1rem;
     color: ${theme.colors.muted};
   }
-
   .normal {
-    color: ${theme.colors.text};
+    font-size: 1.5rem;
     font-weight: bold;
   }
 `;
 
 const Options = styled.div`
-  margin-top: 1.5rem;
+  margin: 1rem 0;
 `;
 
 const SizeSelector = styled.div`
-  display: flex;
-  gap: 1rem;
   margin-bottom: 1rem;
-
-  span {
-    font-weight: bold;
-  }
 `;
 
 const SizeOption = styled.button`
+  margin-right: 0.5rem;
   padding: 0.5rem 1rem;
-  background-color: #f5f5f5;
-  border: 1px solid #ccc;
+  border: 1px solid ${theme.colors.primary};
+  background: ${theme.colors.white};
   cursor: pointer;
 `;
 
 const ColorSelector = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
 `;
 
-const ColorOption = styled.div`
-  width: 24px;
-  height: 24px;
+const ColorOption = styled.button`
+  width: 2rem;
+  height: 2rem;
   border-radius: 50%;
-  border: 1px solid #ccc;
+  border: 1px solid ${theme.colors.text};
   cursor: pointer;
 `;
 
 const ActionButtons = styled.div`
+  margin: 2rem 0;
   display: flex;
   gap: 1rem;
-  margin-top: 2rem;
+  align-items: center;
 `;
 
 const QuantitySelector = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-
   button {
-    width: 32px;
-    height: 32px;
-    background-color: #f5f5f5;
-    border: 1px solid #ccc;
+    padding: 0.5rem;
+    background: ${theme.colors.white};
+    border: 1px solid ${theme.colors.primary};
     cursor: pointer;
   }
-
-  span {
-    padding: 0 1rem;
-    font-weight: bold;
-  }
-`;
-
-const AddToCartButton = styled.button`
-  padding: 1rem 2rem;
-  background-color: ${theme.colors.primary};
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-
-  &:hover {
-    background-color: ${theme.colors.black};
-  }
-`;
-
-const CompareButton = styled.button`
-  padding: 1rem 2rem;
-  background-color: #fff;
-  border: 1px solid ${theme.colors.primary};
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
 `;
 
 const ProductMeta = styled.div`
   margin-top: 2rem;
-
-  p {
-    font-size: 1rem;
-    color: ${theme.colors.muted};
-    margin-bottom: 0.5rem;
-  }
 `;
 
 const DescriptionSection = styled.div`
-  margin-top: 4rem;
+  margin-top: 3rem;
 `;
 
 const Tab = styled.div`
   display: flex;
   gap: 2rem;
   border-bottom: 1px solid ${theme.colors.muted};
+  margin-bottom: 1rem;
 `;
 
 const TabItem = styled.button<{ active?: boolean }>`
-  padding: 1rem;
-  border: none;
   background: none;
-  font-size: 1.125rem;
+  border: none;
+  font-size: 1.25rem;
   font-weight: ${({ active }) => (active ? "bold" : "normal")};
-  color: ${({ active }) => (active ? theme.colors.text : theme.colors.muted)};
-  border-bottom: ${({ active }) =>
-    active ? `2px solid ${theme.colors.accent}` : "none"};
+  color: ${({ active }) => (active ? theme.colors.primary : theme.colors.text)};
   cursor: pointer;
+  padding-bottom: 0.5rem;
+  border-bottom: ${({ active }) =>
+    active ? `2px solid ${theme.colors.primary}` : "none"};
 `;
 
 const DescriptionContent = styled.div`
-  padding: 2rem 0;
-
-  p {
-    font-size: 1rem;
-    color: ${theme.colors.muted};
-  }
+  font-size: 1rem;
+  color: ${theme.colors.text};
 `;

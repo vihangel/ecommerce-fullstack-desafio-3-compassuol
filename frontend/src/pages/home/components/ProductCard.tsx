@@ -37,7 +37,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       {product.is_new && <NewTag>New</NewTag>}
       <ImageWrapper>
         <Image
-          src={product.image_url}
+          src={product.cover_image_url}
           alt={product.name}
           onError={(e) =>
             (e.currentTarget.src = "../../../assets/images/default_image.png")

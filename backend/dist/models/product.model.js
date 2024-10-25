@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Product = void 0;
 const typeorm_1 = require("typeorm");
 const category_model_1 = require("./category.model");
+const review_model_1 = require("./review.model");
 let Product = class Product {
 };
 exports.Product = Product;
@@ -56,13 +57,33 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Product.prototype, "is_new", void 0);
 __decorate([
-    (0, typeorm_1.Column)('bytea', { nullable: true }),
-    __metadata("design:type", Buffer)
-], Product.prototype, "image_data", void 0);
+    (0, typeorm_1.Column)('text', { array: true, nullable: true }),
+    __metadata("design:type", Array)
+], Product.prototype, "sizes", void 0);
+__decorate([
+    (0, typeorm_1.Column)('jsonb', { nullable: true }),
+    __metadata("design:type", Array)
+], Product.prototype, "colors", void 0);
+__decorate([
+    (0, typeorm_1.Column)('text', { array: true, nullable: true }),
+    __metadata("design:type", Array)
+], Product.prototype, "tags", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], Product.prototype, "additional_information", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => review_model_1.Review, (review) => review.product),
+    __metadata("design:type", Array)
+], Product.prototype, "reviews", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
-], Product.prototype, "image_url", void 0);
+], Product.prototype, "cover_image_url", void 0);
+__decorate([
+    (0, typeorm_1.Column)('text', { array: true, nullable: true }),
+    __metadata("design:type", Array)
+], Product.prototype, "gallery_images", void 0);
 __decorate([
     (0, typeorm_1.Column)('timestamp', { default: () => 'CURRENT_TIMESTAMP' }),
     __metadata("design:type", Date)

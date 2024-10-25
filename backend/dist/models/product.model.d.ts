@@ -1,4 +1,5 @@
 import { Category } from './category.model';
+import { Review } from './review.model';
 export declare class Product {
     id: number;
     name: string;
@@ -10,8 +11,16 @@ export declare class Product {
     discount_price?: number;
     discount_percent?: number;
     is_new: boolean;
-    image_data?: Buffer;
-    image_url: string;
+    sizes?: string[];
+    colors?: {
+        name: string;
+        image_url: string;
+    }[];
+    tags?: string[];
+    additional_information?: string;
+    reviews: Review[];
+    cover_image_url: string;
+    gallery_images?: string[];
     created_date: Date;
     updated_date: Date;
 }
