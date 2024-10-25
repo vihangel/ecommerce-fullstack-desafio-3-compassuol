@@ -1,37 +1,47 @@
 /** @format */
 
 // src/components/ProductCard.tsx
-import React from 'react';
-import { FaExchangeAlt, FaHeart, FaShareAlt } from 'react-icons/fa';
-import styled from 'styled-components';
-import { Product } from '../../../models/Product';
-import { theme } from '../../../styles/theme';
+import React from "react";
+import { FaExchangeAlt, FaHeart, FaShareAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { Product } from "../../../models/Product";
+import { theme } from "../../../styles/theme";
 
 interface ProductCardProps {
-  product: Product; 
-}const formatPrice = (price: string): string => {
-    return parseInt(price, 10).toLocaleString('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0,
-    });
-  };
+  product: Product;
+}
+const formatPrice = (price: string): string => {
+  return parseInt(price, 10).toLocaleString("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+  });
+};
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  
+  const navigate = useNavigate();
   const formattedPrice = formatPrice(product.discount_price ?? product.price);
-  const formattedOldPrice = product.discount_price ? formatPrice(product.price) : null;
+  const formattedOldPrice = product.discount_price
+    ? formatPrice(product.price)
+    : null;
 
-
+  const handleCardClick = () => {
+    navigate(`/shop/${product.id}`);
+  };
   return (
-    <Card>
-      {product.discount_percent && <DiscountTag>-{product.discount_percent}%</DiscountTag>}
+    <Card onClick={handleCardClick}>
+      {product.discount_percent && (
+        <DiscountTag>-{product.discount_percent}%</DiscountTag>
+      )}
       {product.is_new && <NewTag>New</NewTag>}
       <ImageWrapper>
         <Image
           src={product.image_url}
           alt={product.name}
-          onError={(e) => (e.currentTarget.src = '../../../assets/images/default_image.png')} 
+          onError={(e) =>
+            (e.currentTarget.src = "../../../assets/images/default_image.png")
+          }
         />
       </ImageWrapper>
       <Content>
@@ -97,7 +107,8 @@ const Card = styled.div`
     opacity: 1;
   }
 
-  @media (max-width: 40.625rem) { // 650px to rem
+  @media (max-width: 40.625rem) {
+    // 650px to rem
     width: 80vw;
   }
 `;

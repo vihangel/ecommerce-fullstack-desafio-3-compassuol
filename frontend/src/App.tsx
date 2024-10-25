@@ -8,7 +8,7 @@ import AppBar from "./components/AppBar";
 import Footer from "./components/Footer";
 import ErrorPage from "./pages/error/ErrorPage";
 import HomePage from "./pages/home/HomePage";
-
+import ShopDetailsPage from "./pages/shop/ShopDetailsPage";
 import ShopPage from "./pages/shop/ShopPage";
 import GlobalStyles from "./styles/GlobalStyles";
 import { theme } from "./styles/theme";
@@ -22,6 +22,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/shop" element={<ShopPage />} />
+          <Route path="/shop/:id" element={<ShopDetailsPage />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
         <Footer></Footer>

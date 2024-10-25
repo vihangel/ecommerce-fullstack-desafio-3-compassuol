@@ -9,6 +9,7 @@ export const theme = {
     accent: "#E97171",
     background: "#F4F5F7",
     text: "#333333", // Preto Suave (texto principal)
+
     muted: "#9F9F9F", // Cinza Escuro (texto secundário)
     hr: "#D9D9D9",
     linkHover: "#B88E2F",
