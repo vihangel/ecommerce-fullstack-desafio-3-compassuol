@@ -97,7 +97,7 @@ const ProductDetailsPage: React.FC = () => {
                 <span className="normal">{formatPrice(product.price)}</span>
               )}
             </Price>
-            <p>{product.large_description}</p>
+            <h4>{product.large_description}</h4>
 
             <Options>
               <SizeSelector>
@@ -315,8 +315,9 @@ const CompareButton = styled.button`
 const ProductInfo = styled.div`
   flex: 1;
 
-  p {
+  h4 {
     font-size: 13px;
+    font-weight: 400;
     color: ${theme.colors.black};
   }
 `;
@@ -411,35 +412,44 @@ const ProductMeta = styled.div`
   gap: 15px;
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
 
 const DescriptionSection = styled.div`
   margin-top: 3rem;
-  margin-bottom: 3rem;
+  margin-bottom: 34px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  flex-direction: column;
+  max-width: 1026px;
+  align-items: center;
 `;
 
 const Tab = styled.div`
   display: flex;
-  gap: 2rem;
-  border-bottom: 1px solid ${theme.colors.muted};
+  gap: 52px;
+
   margin-bottom: 1rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 `;
 
 const TabItem = styled.button<{ active?: boolean }>`
   background: none;
   border: none;
-  font-size: 1.25rem;
-  font-weight: ${({ active }) => (active ? "bold" : "normal")};
-  color: ${({ active }) => (active ? theme.colors.primary : theme.colors.text)};
+  font-size: 24px;
+  font-weight: ${({ active }) => (active ? "medium" : "normal")};
+  color: ${({ active }) => (active ? theme.colors.black : theme.colors.muted)};
   cursor: pointer;
-  padding-bottom: 0.5rem;
-  border-bottom: ${({ active }) =>
-    active ? `2px solid ${theme.colors.primary}` : "none"};
+  padding-bottom: 43px;
 `;
 
 const DescriptionContent = styled.div`
-  font-size: 1rem;
-  color: ${theme.colors.text};
+  font-size: 16px;
+  color: ${theme.colors.muted};
+  text-align: justify;
 `;
 
 const ShareWrapper = styled.div`
