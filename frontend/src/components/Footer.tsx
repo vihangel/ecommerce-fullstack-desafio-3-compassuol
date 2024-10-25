@@ -1,11 +1,13 @@
+/** @format */
+
 // src/components/Footer.tsx
-import axios from 'axios';
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { theme } from '../styles/theme';
+import axios from "axios";
+import React, { useState } from "react";
+import styled from "styled-components";
+import { theme } from "../styles/theme";
 
 const Footer: React.FC = () => {
-  const [email, setEmail] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -15,20 +17,23 @@ const Footer: React.FC = () => {
   };
 
   const handleSubscribe = async () => {
-    if (!validateEmail(email)) { setMessage(null);
+    if (!validateEmail(email)) {
+      setMessage(null);
       setError(null);
-      setError('Por favor, insira um endereço de e-mail válido.');
+      setError("Por favor, insira um endereço de e-mail válido.");
       return;
     }
-    
+
     try {
       setMessage(null);
       setError(null);
-      await axios.post('http://localhost:3000/newsletter/send', { to: email });
-      setMessage('Inscrição realizada com sucesso! Confira seu e-mail.');
-      setEmail(''); // Limpa o campo de e-mail após o envio
+      await axios.post("http://localhost:3000/newsletter/send", { to: email });
+      setMessage("Inscrição realizada com sucesso! Confira seu e-mail.");
+      setEmail(""); // Limpa o campo de e-mail após o envio
     } catch (err) {
-      setError('Erro ao tentar se inscrever. Por favor, tente novamente mais tarde.');
+      setError(
+        "Erro ao tentar se inscrever. Por favor, tente novamente mais tarde."
+      );
     }
   };
 
@@ -91,12 +96,12 @@ const Container = styled.div`
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
-wrap: wrap;
+  wrap: wrap;
   gap: 3rem;
 
   @media (max-width: 768px) {
     display: grid;
-    grid-template-columns: 1fr  1fr ;
+    grid-template-columns: 1fr 1fr;
     gap: 2rem;
   }
 
@@ -143,7 +148,7 @@ const FooterNewsletter = styled.div`
 
 const ColumnTitle = styled.h3`
   font-size: 16px;
-  font-weight: 500; 
+  font-weight: 500;
   color: ${theme.colors.muted};
   margin-bottom: 1rem;
 `;
@@ -165,56 +170,49 @@ const NewsletterForm = styled.form`
   align-items: center;
 `;
 
-
 // Styled Component para o campo de entrada de e-mail
 const SubscriptionInput = styled.input`
   font-size: 14px;
-  font-weight: 400; 
+  font-weight: 400;
   border: none;
   min-width: 200px;
-  border-bottom: 1px solid ${theme.colors.muted}; 
+  border-bottom: 1px solid ${theme.colors.muted};
   padding: 0.7rem 0;
   margin-right: 10px;
-  outline: none; 
+  outline: none;
   color: ${theme.colors.text};
 
   &::placeholder {
-    color: ${theme.colors.muted}; 
+    color: ${theme.colors.muted};
   }
 
   &:focus {
-    border-bottom: 1px solid ${theme.colors.primary}; 
+    border-bottom: 1px solid ${theme.colors.primary};
   }
 `;
 
 // Styled Component para o botão Subscribe
 const SubscribeText = styled.span`
   font-size: 14px;
-  font-weight: 500; 
+  font-weight: 500;
   color: ${theme.colors.black};
   border: none;
-  border-bottom: 1px solid ${theme.colors.black}; 
+  border-bottom: 1px solid ${theme.colors.black};
   padding: 0.5rem 0;
   cursor: pointer;
 
   &:hover {
-    border-bottom: 1px solid ${theme.colors.primary}; 
-    color: ${theme.colors.primary}; 
+    border-bottom: 1px solid ${theme.colors.primary};
+    color: ${theme.colors.primary};
   }
 `;
-
 
 const SubscriptionWrapper = styled.div`
   display: flex;
   align-items: center;
-
 `;
 
-
-
 const BottomLine = styled.hr`
-  border: none;
-  border-top: 1px solid ${theme.colors.hr};
   margin-bottom: 35px;
   margin-top: 48px;
 `;
@@ -225,7 +223,6 @@ const CopyRight = styled.p`
   color: ${theme.colors.black};
   text-align: left;
 `;
-
 
 const SuccessMessage = styled.p`
   margin-top: 1rem;
