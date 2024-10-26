@@ -74,7 +74,8 @@ export class ProductService {
 
     // Caso o número de produtos filtrados seja menor que o limite,
     // buscar mais produtos sem aplicar os filtros para preencher o restante
-    if (products.length < limit) {
+    console.log(`Pagina: ${page} de um total de ${totalPages}`);
+    if (products.length < limit && page != totalPages) {
       const additionalQuery = this.productRepository
         .createQueryBuilder('product')
         .leftJoinAndSelect('product.category', 'category')
@@ -94,7 +95,9 @@ export class ProductService {
       totalItems = products.length;
       totalPages = Math.ceil(totalItems / limit);
     }
-
+    if (totalPages < page) {
+      totalPages = page;
+    }
     console.log(
       `Produtos obtidos: ${products.length} de um total de ${totalItems}`,
     );

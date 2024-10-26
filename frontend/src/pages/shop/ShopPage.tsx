@@ -1,8 +1,9 @@
 /** @format */
 
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { Product } from "../../models/Product";
+import { fetchProducts } from "../../services/ProductServices";
 import { theme } from "../../styles/theme";
 import FeatureSection from "../home/components/FeatureSection";
 import ProductSection from "../home/components/ProductSection";
@@ -12,60 +13,69 @@ import ShopHero from "./components/ShopHero";
 
 const ShopPage: React.FC = () => {
   const useMockData = false;
-
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(!useMockData);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(16);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [totalItems, setTotalItems] = useState<number>(0);
+  const [sort, setSort] = useState<"ASC" | "DESC" | undefined>(undefined);
 
-  // Função para buscar produtos, acionada sempre que currentPage ou itemsPerPage mudarem
-  const fetchProducts = () => {
-    if (useMockData) {
-      setLoading(true);
-      setTimeout(() => {
-        // Mock data handling
-      }, 2000);
-    } else {
-      setLoading(true);
-      setError(null);
+  // Função para buscar produtos, acionada sempre que currentPage, itemsPerPage ou filtros mudarem
+  const loadProducts = async () => {
+    setLoading(true);
+    setError(null);
 
-      axios
-        .get(`http://localhost:3000/products`, {
-          params: {
-            page: currentPage,
-            limit: itemsPerPage,
-          },
-        })
-        .then((response) => {
-          const { products, totalItems, totalPages } = response.data;
-          setProducts(products);
-          setTotalItems(totalItems);
-          setTotalPages(totalPages);
-        })
-        .catch((error) => {
-          console.error("Erro ao buscar produtos:", error);
-          setError(
-            "Estamos com problemas para exibir os produtos. Tente novamente mais tarde."
+    try {
+      if (useMockData) {
+        setTimeout(() => {
+          // Mock data handling
+          setProducts(mockProducts);
+          setTotalItems(mockProducts.length);
+          setTotalPages(
+            Math.max(1, Math.ceil(mockProducts.length / itemsPerPage))
           );
-        })
-        .finally(() => {
           setLoading(false);
-        });
+        }, 2000);
+      } else {
+        const fetchedProductsResponse = await fetchProducts(
+          undefined,
+          itemsPerPage,
+          currentPage,
+          sort
+        );
+
+        // Atualizar os valores de totalItems e totalPages conforme a resposta do backend
+        setTotalItems(fetchedProductsResponse.totalItems);
+        setTotalPages(
+          Math.max(
+            1,
+            Math.ceil(fetchedProductsResponse.totalItems / itemsPerPage)
+          )
+        );
+
+        setProducts(fetchedProductsResponse.products);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar produtos:", error);
+      setError(
+        "Estamos com problemas para exibir os produtos. Tente novamente mais tarde."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Atualizar os produtos sempre que currentPage ou itemsPerPage mudarem
+  // Atualizar os produtos sempre que currentPage, itemsPerPage ou filtros mudarem
   useEffect(() => {
-    fetchProducts();
-  }, [currentPage, itemsPerPage, currentPage]);
+    loadProducts();
+  }, [currentPage, itemsPerPage, sort]);
 
   // Função para alterar o número de itens por página
   const handleItemsPerPageChange = (value: number) => {
     setItemsPerPage(value);
-    setCurrentPage(1);
+    setCurrentPage(1); // Reseta a página para 1 ao alterar o número de itens por página
   };
 
   // Função para alterar a página atual
@@ -73,6 +83,16 @@ const ShopPage: React.FC = () => {
     if (page > 0 && page <= totalPages) {
       setCurrentPage(page);
     }
+  };
+
+  // Função para alterar a ordenação
+  const handleSortChange = (value: "ASC" | "DESC" | "default") => {
+    if (value === "default") {
+      setSort(undefined);
+    } else {
+      setSort(value);
+    }
+    setCurrentPage(1);
   };
 
   return (
@@ -85,6 +105,7 @@ const ShopPage: React.FC = () => {
         itemsPerPage={itemsPerPage}
         setItemsPerPage={handleItemsPerPageChange}
         handlePageChange={handlePageChange}
+        handleSortChange={handleSortChange}
       />
       {loading ? (
         <LoadingMessage>Carregando produtos...</LoadingMessage>
@@ -93,12 +114,13 @@ const ShopPage: React.FC = () => {
       ) : (
         <>
           <ProductSection title="Our Products" products={products} />
-
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )}
         </>
       )}
       <FeatureSection />
