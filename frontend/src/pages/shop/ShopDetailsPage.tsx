@@ -33,9 +33,12 @@ const ProductDetailsPage: React.FC = () => {
         setProduct(productData);
         setMainImage(productData.cover_image_url);
 
-        const relatedProducts = await fetchProducts(productData.category.id, 5);
+        const relatedProductsResponse = await fetchProducts(
+          productData.category.id,
+          5
+        );
 
-        const filteredRelatedProducts = relatedProducts.filter(
+        const filteredRelatedProducts = relatedProductsResponse.products.filter(
           (relatedProduct) => relatedProduct.id !== productData.id
         );
 
@@ -71,12 +74,16 @@ const ProductDetailsPage: React.FC = () => {
   // Função para mostrar mais produtos relacionados
   const handleShowMore = async () => {
     try {
-      const moreProducts = await fetchProducts(product.category?.id, 4);
+      const moreProductsResponse = await fetchProducts(product.category?.id, 4);
+      const moreProducts = moreProductsResponse.products;
+
       console.log(
         "Mais produtos category:",
         moreProducts.map((p) => p.name + " - " + p.category?.name)
       );
+
       setRelatedProducts((prevProducts) => [...prevProducts, ...moreProducts]);
+
       console.log(
         "Mais produtos category:",
         moreProducts.map((p) => p.name + " - " + p.category?.name)

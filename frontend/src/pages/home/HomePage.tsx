@@ -1,50 +1,53 @@
 /** @format */
 
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import HeroImage from "../../assets/images/hero.png";
 import Container from "../../components/shared/Container";
+import { fetchProducts } from "../../services/ProductServices";
 import { theme } from "../../styles/theme";
 import ProductSection from "../home/components/ProductSection";
 import CategorySection from "./components/CategorySection";
 import FeatureSection from "./components/FeatureSection";
 
+import { Product } from "../../models/Product";
 const HomePage: React.FC = () => {
   const useMockData = false;
 
-  const [products, setProducts] = useState(mockProducts);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(!useMockData);
 
   const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
-    if (useMockData) {
-      setLoading(true);
-      setTimeout(() => {
-        setProducts(mockProducts);
-        setLoading(false);
-      }, 2000);
-    } else {
+    const loadProducts = async () => {
       setLoading(true);
       setError(null);
-      axios
-        .get("http://localhost:3000/products?limit=8")
-        .then((response) => {
-          const { products, totalItems, totalPages } = response.data;
-          setProducts(products);
-        })
-        .catch((error) => {
-          console.error("Erro ao buscar produtos:", error);
-          setError(
-            "Estamos com problemas para exibir os produtos. Tente novamente mais tarde."
-          );
-          setProducts(mockProducts);
-        })
-        .finally(() => {
+
+      try {
+        if (useMockData) {
+          setTimeout(() => {
+            setProducts(mockProducts);
+            setLoading(false);
+          }, 2000);
+        } else {
+          // Correção aqui
+          const fetchedProductsResponse = await fetchProducts(undefined, 8);
+          setProducts(fetchedProductsResponse.products);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar produtos:", error);
+        setError(
+          "Estamos com problemas para exibir os produtos. Tente novamente mais tarde."
+        );
+        setProducts(mockProducts);
+      } finally {
+        if (!useMockData) {
           setLoading(false);
-        });
-    }
+        }
+      }
+    };
+
+    loadProducts();
   }, [useMockData]);
 
   return (
