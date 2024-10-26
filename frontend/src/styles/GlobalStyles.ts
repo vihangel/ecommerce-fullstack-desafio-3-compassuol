@@ -2,6 +2,7 @@
 
 // src/styles/GlobalStyles.ts
 import { createGlobalStyle } from "styled-components";
+import { theme } from "./theme";
 
 const GlobalStyles = createGlobalStyle`
   /* CSS Reset */
@@ -32,6 +33,19 @@ const GlobalStyles = createGlobalStyle`
   button {
     font-family: 'Poppins', sans-serif;
     cursor: pointer;
+  }
+
+  p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: ${theme.colors.muted};
+
+  }
+
+  hr {
+    border: none;
+  border-top: 1px solid ${theme.colors.hr};
   }
 `;
 

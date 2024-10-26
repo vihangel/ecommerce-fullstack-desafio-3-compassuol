@@ -1,49 +1,18 @@
-import {
-  IsBoolean,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
-
 export class CreateProductDto {
-  @IsNotEmpty()
-  @IsString()
   name: string;
-
-  @IsNotEmpty()
-  @IsString()
   sku: string;
-
-  @IsNotEmpty()
-  @IsNumber()
   category_id: number;
-
-  @IsNotEmpty()
-  @IsString()
-  description: string;
-
-  @IsOptional()
-  @IsString()
+  description?: string;
   large_description?: string;
-
-  @IsNotEmpty()
-  @IsNumber()
   price: number;
-
-  @IsOptional()
-  @IsNumber()
   discount_price?: number;
-
-  @IsOptional()
-  @IsNumber()
   discount_percent?: number;
-
-  @IsNotEmpty()
-  @IsBoolean()
-  is_new: boolean;
-
-  @IsOptional()
-  @IsString()
+  is_new?: boolean;
+  sizes?: string[];
+  colors?: { name: string; image_url: string }[];
+  tags?: string[];
+  additional_information?: string;
+  cover_image_url?: string;
+  gallery_images?: string[];
   image_data?: string;
 }

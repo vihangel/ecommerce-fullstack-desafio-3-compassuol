@@ -65,17 +65,10 @@ let ProductService = class ProductService {
                 throw new common_1.NotFoundException(`Categoria com ID ${productData.category_id} não encontrada`);
             }
             const newProduct = this.productRepository.create({
-                name: productData.name,
-                sku: productData.sku,
-                description: productData.description,
-                large_description: productData.large_description,
-                price: productData.price,
-                discount_price: productData.discount_price,
-                discount_percent: productData.discount_percent,
-                is_new: productData.is_new,
+                ...productData,
+                category: { id: productData.category_id },
                 created_date: new Date(),
                 updated_date: new Date(),
-                category: { id: productData.category_id },
             });
             const savedProduct = await this.productRepository.save(newProduct);
             if (image) {
@@ -84,13 +77,17 @@ let ProductService = class ProductService {
                         folder: 'products',
                         public_id: `product_${savedProduct.id}`,
                     });
-                    savedProduct.image_url = result.secure_url;
+                    savedProduct.cover_image_url = result.secure_url;
                     await this.productRepository.save(savedProduct);
                 }
                 catch (error) {
                     console.error('Erro ao salvar a imagem no Cloudinary:', error.message);
                     throw new Error('Erro ao salvar a imagem no Cloudinary: ' + error.message);
                 }
+            }
+            else if (productData.cover_image_url) {
+                savedProduct.cover_image_url = productData.cover_image_url;
+                await this.productRepository.save(savedProduct);
             }
             return savedProduct;
         }
@@ -111,6 +108,9 @@ let ProductService = class ProductService {
     }
     async update(id, updateData) {
         const product = await this.findOne(id);
+        if (!product) {
+            throw new common_1.NotFoundException(`Produto com ID ${id} não encontrado.`);
+        }
         const updatedProduct = Object.assign(product, updateData, {
             updated_date: new Date(),
         });
@@ -126,9 +126,12 @@ let ProductService = class ProductService {
         if (!product) {
             throw new common_1.NotFoundException(`Produto com ID ${id} não encontrado.`);
         }
-        if (product.image_url) {
+        if (product.cover_image_url) {
             try {
-                const publicId = product.image_url.split('/').pop()?.split('.')[0];
+                const publicId = product.cover_image_url
+                    .split('/')
+                    .pop()
+                    ?.split('.')[0];
                 if (publicId) {
                     await cloudinary_1.v2.uploader.destroy(`products/${publicId}`);
                 }
@@ -142,19 +145,8 @@ let ProductService = class ProductService {
     async removeAll() {
         const products = await this.productRepository.find();
         for (const product of products) {
-            if (product.image_url) {
-                try {
-                    const publicId = product.image_url.split('/').pop()?.split('.')[0];
-                    if (publicId) {
-                        await cloudinary_1.v2.uploader.destroy(`products/${publicId}`);
-                    }
-                }
-                catch (error) {
-                    console.error('Erro ao remover a imagem do Cloudinary:', error.message);
-                }
-            }
+            await this.remove(product.id);
         }
-        await this.productRepository.clear();
     }
 };
 exports.ProductService = ProductService;
