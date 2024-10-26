@@ -21,7 +21,7 @@ let ProductController = class ProductController {
     constructor(productService) {
         this.productService = productService;
     }
-    async findAll(categoryId, isNew, price, page = '1', limit = '10', sort) {
+    async findAll(categoryId, isNew, price, page = '1', limit = '10', sort, limitCompleted) {
         const filters = {};
         if (categoryId) {
             filters.category = { id: parseInt(categoryId, 10) };
@@ -34,7 +34,7 @@ let ProductController = class ProductController {
         }
         const pageNumber = parseInt(page, 10);
         const limitNumber = parseInt(limit, 10);
-        return this.productService.findAll(filters, pageNumber, limitNumber, sort);
+        return this.productService.findAll(filters, pageNumber, limitNumber, sort, limitCompleted);
     }
     async findOne(id) {
         return this.productService.findOne(id);
@@ -67,8 +67,9 @@ __decorate([
     __param(3, (0, common_1.Query)('page')),
     __param(4, (0, common_1.Query)('limit')),
     __param(5, (0, common_1.Query)('sort')),
+    __param(6, (0, common_1.Query)('limit_completed')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String, String, String, String]),
+    __metadata("design:paramtypes", [String, String, String, String, String, String, Boolean]),
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "findAll", null);
 __decorate([

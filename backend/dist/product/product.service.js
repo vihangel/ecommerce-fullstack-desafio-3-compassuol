@@ -26,7 +26,7 @@ let ProductService = class ProductService {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }
-    async findAll(filters, page = 1, limit = 10, sort) {
+    async findAll(filters, page = 1, limit = 10, sort, limitCompleted = false) {
         const query = this.productRepository
             .createQueryBuilder('product')
             .leftJoinAndSelect('product.category', 'category');
@@ -55,7 +55,7 @@ let ProductService = class ProductService {
         let [products, totalItems] = await query.getManyAndCount();
         let totalPages = Math.ceil(totalItems / limit);
         console.log(`Pagina: ${page} de um total de ${totalPages}`);
-        if (products.length < limit && page != totalPages) {
+        if (products.length < limit && limitCompleted) {
             const additionalQuery = this.productRepository
                 .createQueryBuilder('product')
                 .leftJoinAndSelect('product.category', 'category')

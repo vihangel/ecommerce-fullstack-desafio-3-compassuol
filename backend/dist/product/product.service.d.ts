@@ -6,7 +6,7 @@ export declare class ProductService {
     private productRepository;
     private categoryRepository;
     constructor(productRepository: Repository<Product>, categoryRepository: Repository<Category>);
-    findAll(filters?: Partial<Product>, page?: number, limit?: number, sort?: 'ASC' | 'DESC'): Promise<{
+    findAll(filters?: Partial<Product>, page?: number, limit?: number, sort?: 'ASC' | 'DESC', limitCompleted?: boolean): Promise<{
         products: Product[];
         totalItems: number;
         totalPages: number;

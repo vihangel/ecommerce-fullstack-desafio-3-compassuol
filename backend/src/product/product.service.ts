@@ -24,6 +24,7 @@ export class ProductService {
     page: number = 1,
     limit: number = 10,
     sort?: 'ASC' | 'DESC',
+    limitCompleted = false,
   ): Promise<{
     products: Product[];
     totalItems: number;
@@ -75,7 +76,7 @@ export class ProductService {
     // Caso o número de produtos filtrados seja menor que o limite,
     // buscar mais produtos sem aplicar os filtros para preencher o restante
     console.log(`Pagina: ${page} de um total de ${totalPages}`);
-    if (products.length < limit && page != totalPages) {
+    if (products.length < limit && limitCompleted) {
       const additionalQuery = this.productRepository
         .createQueryBuilder('product')
         .leftJoinAndSelect('product.category', 'category')

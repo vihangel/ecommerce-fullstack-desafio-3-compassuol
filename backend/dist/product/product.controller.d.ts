@@ -4,7 +4,7 @@ import { ProductService } from './product.service';
 export declare class ProductController {
     private readonly productService;
     constructor(productService: ProductService);
-    findAll(categoryId?: string, isNew?: string, price?: string, page?: string, limit?: string, sort?: 'ASC' | 'DESC'): Promise<{
+    findAll(categoryId?: string, isNew?: string, price?: string, page?: string, limit?: string, sort?: 'ASC' | 'DESC', limitCompleted?: boolean): Promise<{
         products: Product[];
         totalItems: number;
         totalPages: number;

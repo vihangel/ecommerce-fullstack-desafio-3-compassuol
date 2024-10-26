@@ -15,7 +15,8 @@ export const fetchProducts = async (
   limit?: number,
   page?: number,
   sort?: "ASC" | "DESC",
-  isNew?: boolean
+  isNew?: boolean,
+  limitCompleted?: boolean
 ): Promise<FetchProductsResponse> => {
   try {
     let url = `http://localhost:3000/products?`;
@@ -38,6 +39,10 @@ export const fetchProducts = async (
 
     if (isNew !== undefined) {
       url += `is_new=${isNew}&`;
+    }
+
+    if (limitCompleted) {
+      url += `limit_completed=${limitCompleted}&`;
     }
 
     // Removendo o '&' extra no final da URL, caso exista

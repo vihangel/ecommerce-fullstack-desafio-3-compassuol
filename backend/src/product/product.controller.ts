@@ -30,6 +30,7 @@ export class ProductController {
     @Query('page') page: string = '1',
     @Query('limit') limit: string = '10',
     @Query('sort') sort?: 'ASC' | 'DESC',
+    @Query('limit_completed') limitCompleted?: boolean,
   ) {
     const filters: Partial<Product> = {};
 
@@ -49,7 +50,13 @@ export class ProductController {
     const pageNumber = parseInt(page, 10);
     const limitNumber = parseInt(limit, 10);
 
-    return this.productService.findAll(filters, pageNumber, limitNumber, sort);
+    return this.productService.findAll(
+      filters,
+      pageNumber,
+      limitNumber,
+      sort,
+      limitCompleted,
+    );
   }
 
   @Get(':id')

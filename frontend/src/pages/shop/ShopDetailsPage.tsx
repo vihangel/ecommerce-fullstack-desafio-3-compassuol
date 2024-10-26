@@ -35,7 +35,11 @@ const ProductDetailsPage: React.FC = () => {
 
         const relatedProductsResponse = await fetchProducts(
           productData.category.id,
-          5
+          5,
+          undefined,
+          undefined,
+          undefined,
+          true
         );
 
         const filteredRelatedProducts = relatedProductsResponse.products.filter(
