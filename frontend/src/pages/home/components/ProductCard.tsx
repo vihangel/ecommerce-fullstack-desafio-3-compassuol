@@ -53,7 +53,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </Prices>
       </Content>
       <Overlay>
-        <OverlayButton>See Details</OverlayButton>
+        <OverlayButton onClick={handleCardClick}>See Details</OverlayButton>
         <OverlayIcons>
           <OverlayIcon>
             <FaShareAlt /> Share

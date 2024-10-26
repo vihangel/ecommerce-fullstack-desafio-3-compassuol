@@ -1,3 +1,5 @@
+<!-- @format -->
+
 # Ecommerce de Móveis Fullstack para o Desafio da Compass
 
 Este projeto é um e-commerce de móveis fullstack desenvolvido como parte do desafio da Compass. Ele consiste em um back-end construído em NestJS e um front-end em React, proporcionando uma plataforma completa para a compra e gestão de móveis.
@@ -131,3 +133,194 @@ O frontend do projeto é desenvolvido em React e Styled Components, criando uma 
 - **Axios**: Utilizado para fazer requisições ao backend.
 - **React Router**: Para navegação entre as páginas do front-end.
 
+## Critérios de Aceite (Tela Home)
+
+### Cenário: Acesso bem-sucedido a tela inicial da aplicação
+
+- [x] Dado que o usuário entrou na aplicação
+- [x] E que o sistema está funcionando corretamente
+- [x] Quando o usuário clicar em “Shop”
+- [x] Então o sistema deverá redirecionar para uma página de listagens de produtos.
+
+### Cenário: Rolar página
+
+- [x] Dado que o usuário acessou a aplicação
+- [x] E que o sistema está funcionando corretamente
+- [x] Quando o usuário rolar a página
+- [x] Então o sistema deverá exibir em sua primeira seção, opções de categorias.
+
+### Cenário: Acesso as categorias
+
+- [ ] Dado que o usuário visualizou as categorias
+- [ ] E que o sistema está funcionando corretamente
+- [ ] Quando o usuário clicar em uma opção de categoria
+- [ ] Então o sistema deverá redirecionar para uma página de listagem de produtos da
+      categoria referente.
+
+### Cenário: Visualização de produtos
+
+- [x] Dado que o usuário não clicou em categorias
+- [x] E que o sistema está funcionando corretamente
+- [x] Quando o usuário continuar rolando a página
+- [x] Então o sistema deverá exibir uma amostragem de produtos com desconto.
+
+### Cenário: Indicação de desconto ou itens novos
+
+- [x] Dado que o usuário está visualizando os produtos
+- [x] E que o sistema está funcionando corretamente
+- [x] Então o sistema deverá exibir uma espécie de tag nos produtos novos e nos produtos
+      com desconto.
+
+### Cenário: Hover nos produtos
+
+- [x] Dado que o usuário está visualizando os produtos
+- [x] E que o sistema está funcionando corretamente
+- [x] Quando o usuário passar o mouse por cima de um produto
+- [x] Então o sistema deverá exibir uma espécie de hover sobre o produto em questão.
+
+### Cenário: Detalhes do Produto
+
+- [x] Dado que o usuário está visualizando os produtos
+- [x] E que o sistema está funcionando corretamente
+- [x] Quando o usuário clicar em “See Details”
+- [x] Então o sistema deverá redirecionar para uma tela de detalhes do produto.
+
+### Cenário: Exibição de mais produtos
+
+- [ ] Dado que o usuário visualizou os produtos da tela inicial
+- [ ] E que o sistema está funcionando corretamente
+- [ ] Quando o usuário clicar em “Show More”
+- [ ] Então o sistema deverá redirecionar para uma página de listagens de produtos.
+
+## Critérios de Aceite (Tela Shop)
+
+### Cenário: Funcionamento dos menus
+
+- [x] Dado que o usuário entrou na tela Shop
+- [x] E que o usuário quer voltar a tela inicial
+- [x] Quando o usuário clicar em “Home”
+- [x] Então o sistema deverá redirecionar para a tela inicial da aplicação.
+
+### Cenário: Definição de filtros
+
+- [ ] Dado que o usuário entrou na tela Shop
+- [ ] E que o usuário quer visualizar produtos específicos
+- [ ] Quando o usuário clicar em “Filter”
+- [ ] Então o sistema deverá exibir uma listagem de filtros que deverão poder ser
+      selecionados como um checkbox.
+
+### Cenário: Limite de resultado
+
+- [x] Dado que o usuário entrou na tela Shop
+- [x] E que o usuário não realizou nenhuma ação ainda
+- [x] Então o sistema deverá exibir uma listagem de 16 produtos por default
+
+### Cenário: Definição de ordem
+
+- [ ] Dado que o usuário entrou na tela Shop
+- [ ] E que o usuário quer ordernar os produtos
+- [ ] Quando o usuário clicar no campo definido para “Short by”
+- [ ] Então o sistema deverá exibir duas opções de listagem, “Crescente” ou “Descrescente”.
+
+### Cenário: Indicação de desconto ou itens novos
+
+- [x] Dado que o usuário está visualizando os produtos
+- [x] E que o sistema está funcionando corretamente
+- [x] Então o sistema deverá exibir uma espécie de tag nos produtos novos e nos produtos
+      com desconto.
+
+### Cenário: Hover nos produtos
+
+- [x] Dado que o usuário está visualizando os produtos
+- [x] E que o sistema está funcionando corretamente
+- [x] Quando o usuário passar o mouse por cima de um produto
+- [x] Então o sistema deverá exibir uma espécie de hover sobre o produto em questão.
+
+### Cenário: Detalhes do Produto
+
+- [x] Dado que o usuário está visualizando os produtos
+- [x] E que o sistema está funcionando corretamente
+- [x] Quando o usuário clicar em “See Details”
+- [x] Então o sistema deverá redirecionar para uma tela de detalhes do produto.
+
+### Cenário: Exibição de mais produtos
+
+- [x] Dado que o usuário visualizou os primeiros produtos exibidos
+- [x] E que o usuário quer continuar navegando pelos produtos
+- [x] Quando o usuário clicar em uma nova página ou em “Next”
+- [x] Então o sistema deverá trazer resultados do banco baseados naquela página respeitando
+      os filtros existentes.
+
+## Critérios de Aceite (Tela Detalhes do Produto)
+
+### Cenário: Redirecionamento para Home
+
+- [x] Dado que o usuário entrou na tela de detalhes do Produto
+- [x] E que o usuário quer voltar a tela inicial
+- [x] Quando o usuário clicar em “Home”
+- [x] Então o sistema deverá redirecionar para a tela inicial da aplicação.
+
+### Cenário: Redirecionamento para o Shop
+
+- [x] Dado que o usuário entrou na tela de detalhes do Produto
+- [x] E que o usuário quer voltar a tela de produtos
+- [x] Quando o usuário clicar em “Shop”
+- [x] Então o sistema deverá redirecionar para a tela de produtos.
+
+### Cenário: Exibição de detalhes
+
+- [x] Dado que o usuário entrou na tela de detalhes do Produto
+- [x] E que o sistema está funcionando corretamente
+- [x] Quando o usuário clicar em imagens secundárias
+- [x] Então o sistema deverá substituir a imagem sendo exibida pela que foi selecionada.
+
+### Cenário: Exibição de descrição
+
+- [x] Dado que o usuário entrou na tela de detalhes do Produto
+- [x] E que o sistema está funcionando corretamente
+- [x] Quando o usuário rolar a página
+- [x] Então o sistema deverá exibir detalhes descritivos daquele produto
+
+### Cenário: Produtos relacionados
+
+- [ ] Dado que o usuário entrou na tela de detalhes do Produto
+- [ ] E que rolou a página até os produtos selecionado
+- [ ] Quando o usuário os visualizar
+- [ ] Então o sistema deverá estar exibindo produtos da mesma categoria que o produto dos
+      detalhes.
+
+### Cenário: Indicação de desconto ou itens novos
+
+- [x] Dado que o usuário está visualizando os produtos relacionados
+- [x] E que o sistema está funcionando corretamente
+- [x] Então o sistema deverá exibir uma espécie de tag nos produtos novos e nos produtos
+      com desconto.
+
+### Cenário: Hover nos produtos
+
+- [ ] Dado que o usuário está visualizando os produtos relacionados
+- [ ] E que o sistema está funcionando corretamente
+- [ ] Quando o usuário passar o mouse por cima de um produto
+- [ ] Então o sistema deverá exibir uma espécie de hover sobre o produto em questão.
+
+### Cenário: Detalhes do Produto
+
+- [x] Dado que o usuário está visualizando os produtos relacionados
+- [x] E que o sistema está funcionando corretamente
+- [x] Quando o usuário clicar em “See Details”
+- [x] Então o sistema deverá redirecionar para uma tela de detalhes do novo produto clicado.
+
+### Cenário: Exibição de mais produtos
+
+- [ ] Dado que o usuário visualizou os primeiros produtos relacionados exibidos
+- [ ] E que o usuário quer continuar visualizando mais produtos
+- [ ] Quando o usuário clicar em “Show More”
+- [ ] Então o sistema deverá exibir nesta mesma página uma segunda fileira de produtos
+
+### Cenário: Exibição de mais produtos 2x
+
+- [ ] Dado que o usuário já clicou em "Show More” 1x
+- [ ] E que o usuário quer continuar visualizando mais produtos
+- [ ] Quando o usuário clicar em “Show More” novamente
+- [ ] Então o sistema deverá redirecionar para a tela “Shop” exibindo produtos somente
+      produtos relacionados, ou seja, da mesma categoria.

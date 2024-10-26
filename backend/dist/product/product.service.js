@@ -26,27 +26,52 @@ let ProductService = class ProductService {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }
-    async findAll(filters, page = 1, limit = 10) {
+    async findAll(filters, page = 1, limit = 10, sort) {
         const query = this.productRepository
             .createQueryBuilder('product')
             .leftJoinAndSelect('product.category', 'category');
         if (filters) {
             if (filters.category?.id) {
-                query.andWhere('product.category.id = :categoryId', {
+                console.log(`Filtrando por categoria ID: ${filters.category.id}`);
+                query.andWhere('category.id = :categoryId', {
                     categoryId: filters.category.id,
                 });
             }
             if (filters.is_new !== undefined) {
+                console.log(`Filtrando por produtos novos: ${filters.is_new}`);
                 query.andWhere('product.is_new = :isNew', { isNew: filters.is_new });
             }
-            if (filters.price) {
+            if (filters.price !== undefined) {
+                console.log(`Filtrando por preço até: ${filters.price}`);
                 query.andWhere('product.price <= :price', { price: filters.price });
             }
         }
+        if (sort) {
+            console.log(`Ordenando por preço: ${sort}`);
+            query.orderBy('product.price', sort);
+        }
         const skip = (page - 1) * limit;
         query.skip(skip).take(limit);
-        const [products, totalItems] = await query.getManyAndCount();
-        const totalPages = Math.ceil(totalItems / limit);
+        let [products, totalItems] = await query.getManyAndCount();
+        let totalPages = Math.ceil(totalItems / limit);
+        if (products.length < limit) {
+            const additionalQuery = this.productRepository
+                .createQueryBuilder('product')
+                .leftJoinAndSelect('product.category', 'category')
+                .where('product.id NOT IN (:...filteredIds)', {
+                filteredIds: products.map((p) => p.id),
+            })
+                .skip(0)
+                .take(limit - products.length);
+            if (sort) {
+                additionalQuery.orderBy('product.price', sort);
+            }
+            const additionalProducts = await additionalQuery.getMany();
+            products = [...products, ...additionalProducts];
+            totalItems = products.length;
+            totalPages = Math.ceil(totalItems / limit);
+        }
+        console.log(`Produtos obtidos: ${products.length} de um total de ${totalItems}`);
         return { products, totalItems, totalPages, currentPage: page };
     }
     async findOne(id) {

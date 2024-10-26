@@ -21,8 +21,20 @@ let ProductController = class ProductController {
     constructor(productService) {
         this.productService = productService;
     }
-    async findAll(filters, page = 1, limit = 10) {
-        return this.productService.findAll(filters, page, limit);
+    async findAll(categoryId, isNew, price, page = '1', limit = '10', sort) {
+        const filters = {};
+        if (categoryId) {
+            filters.category = { id: parseInt(categoryId, 10) };
+        }
+        if (isNew !== undefined) {
+            filters.is_new = isNew.toLowerCase() === 'true';
+        }
+        if (price !== undefined) {
+            filters.price = parseFloat(price);
+        }
+        const pageNumber = parseInt(page, 10);
+        const limitNumber = parseInt(limit, 10);
+        return this.productService.findAll(filters, pageNumber, limitNumber, sort);
     }
     async findOne(id) {
         return this.productService.findOne(id);
@@ -49,11 +61,14 @@ let ProductController = class ProductController {
 exports.ProductController = ProductController;
 __decorate([
     (0, common_1.Get)(),
-    __param(0, (0, common_1.Query)()),
-    __param(1, (0, common_1.Query)('page')),
-    __param(2, (0, common_1.Query)('limit')),
+    __param(0, (0, common_1.Query)('category_id')),
+    __param(1, (0, common_1.Query)('is_new')),
+    __param(2, (0, common_1.Query)('price')),
+    __param(3, (0, common_1.Query)('page')),
+    __param(4, (0, common_1.Query)('limit')),
+    __param(5, (0, common_1.Query)('sort')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Number, Number]),
+    __metadata("design:paramtypes", [String, String, String, String, String, String]),
     __metadata("design:returntype", Promise)
 ], ProductController.prototype, "findAll", null);
 __decorate([

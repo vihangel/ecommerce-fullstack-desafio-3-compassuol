@@ -7,6 +7,7 @@ import styled from "styled-components";
 import defaultProductImage from "../../assets/images/default_product.png";
 import Container from "../../components/shared/Container";
 import { Product } from "../../models/Product";
+import { fetchProducts } from "../../services/ProductServices";
 import { theme } from "../../styles/theme";
 import ProductSection from "../home/components/ProductSection";
 import TopBarDetails from "./components/TopBarDetails";
@@ -32,11 +33,13 @@ const ProductDetailsPage: React.FC = () => {
         setProduct(productData);
         setMainImage(productData.cover_image_url);
 
-        // Obter produtos relacionados com base na categoria do produto
-        const relatedResponse = await axios.get(
-          `http://localhost:3000/products?category_id=${productData.category.id}&limit=4`
+        const relatedProducts = await fetchProducts(productData.category.id, 5);
+
+        const filteredRelatedProducts = relatedProducts.filter(
+          (relatedProduct) => relatedProduct.id !== productData.id
         );
-        setRelatedProducts(relatedResponse.data.products);
+
+        setRelatedProducts(filteredRelatedProducts);
       } catch (error) {
         setError("Erro ao buscar os detalhes do produto.");
       } finally {
@@ -63,6 +66,24 @@ const ProductDetailsPage: React.FC = () => {
   const handleColorSelect = (colorImageUrl: string | undefined) => {
     setMainImage(colorImageUrl || product.cover_image_url || null);
     setSelectedColor(colorImageUrl || null);
+  };
+
+  // Função para mostrar mais produtos relacionados
+  const handleShowMore = async () => {
+    try {
+      const moreProducts = await fetchProducts(product.category?.id, 4);
+      console.log(
+        "Mais produtos category:",
+        moreProducts.map((p) => p.name + " - " + p.category?.name)
+      );
+      setRelatedProducts((prevProducts) => [...prevProducts, ...moreProducts]);
+      console.log(
+        "Mais produtos category:",
+        moreProducts.map((p) => p.name + " - " + p.category?.name)
+      );
+    } catch (error) {
+      console.error("Erro ao buscar mais produtos:", error);
+    }
   };
 
   return (
@@ -175,12 +196,15 @@ const ProductDetailsPage: React.FC = () => {
           </DescriptionContent>
         </DescriptionSection>
       </Container>
-      <ProductSection title="Related Products" products={relatedProducts} />
+      <ProductSection
+        title="Related Products"
+        products={relatedProducts}
+        showMore={handleShowMore}
+      />
     </Main>
   );
 };
 export default ProductDetailsPage;
-
 // Função auxiliar para formatar o preço
 const formatPrice = (price: string): string => {
   return parseInt(price, 10).toLocaleString("id-ID", {

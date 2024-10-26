@@ -71,7 +71,13 @@ const HomePage: React.FC = () => {
       ) : error ? (
         <ErrorMessage>{error}</ErrorMessage>
       ) : (
-        <ProductSection title="Our Products" products={products} />
+        <ProductSection
+          title="Our Products"
+          products={products}
+          showMore={() => {
+            console.log("Show more products...");
+          }}
+        />
       )}
       <FeatureSection />
     </Main>

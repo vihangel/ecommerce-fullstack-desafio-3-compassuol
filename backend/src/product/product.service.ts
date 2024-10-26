@@ -23,40 +23,81 @@ export class ProductService {
     filters?: Partial<Product>,
     page: number = 1,
     limit: number = 10,
+    sort?: 'ASC' | 'DESC',
   ): Promise<{
     products: Product[];
     totalItems: number;
     totalPages: number;
     currentPage: number;
   }> {
+    // Inicializando a consulta
     const query = this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.category', 'category');
 
-    // Aplicando filtros, se houver
+    // Aplicando filtros na ordem desejada
     if (filters) {
+      // 1. Filtro de Categoria (se houver)
       if (filters.category?.id) {
-        query.andWhere('product.category.id = :categoryId', {
+        console.log(`Filtrando por categoria ID: ${filters.category.id}`);
+        query.andWhere('category.id = :categoryId', {
           categoryId: filters.category.id,
         });
       }
+
+      // 2. Filtro de Produto Novo (is_new)
       if (filters.is_new !== undefined) {
+        console.log(`Filtrando por produtos novos: ${filters.is_new}`);
         query.andWhere('product.is_new = :isNew', { isNew: filters.is_new });
       }
-      if (filters.price) {
+
+      // 3. Filtro de Preço (se houver)
+      if (filters.price !== undefined) {
+        console.log(`Filtrando por preço até: ${filters.price}`);
         query.andWhere('product.price <= :price', { price: filters.price });
       }
-      // Outros filtros podem ser adicionados aqui
     }
 
-    // Corrigindo a aplicação de paginação
+    // Aplicando ordenação, se houver
+    if (sort) {
+      console.log(`Ordenando por preço: ${sort}`);
+      query.orderBy('product.price', sort);
+    }
+
+    // Aplicando paginação
     const skip = (page - 1) * limit;
     query.skip(skip).take(limit);
 
-    // Obtendo os produtos e o total de itens
-    const [products, totalItems] = await query.getManyAndCount();
-    const totalPages = Math.ceil(totalItems / limit);
+    // Obtendo os produtos filtrados e o total de itens filtrados
+    let [products, totalItems] = await query.getManyAndCount();
+    let totalPages = Math.ceil(totalItems / limit);
 
+    // Caso o número de produtos filtrados seja menor que o limite,
+    // buscar mais produtos sem aplicar os filtros para preencher o restante
+    if (products.length < limit) {
+      const additionalQuery = this.productRepository
+        .createQueryBuilder('product')
+        .leftJoinAndSelect('product.category', 'category')
+        .where('product.id NOT IN (:...filteredIds)', {
+          filteredIds: products.map((p) => p.id),
+        })
+        .skip(0)
+        .take(limit - products.length);
+
+      // Adicionando ordenação, se houver
+      if (sort) {
+        additionalQuery.orderBy('product.price', sort);
+      }
+
+      const additionalProducts = await additionalQuery.getMany();
+      products = [...products, ...additionalProducts];
+      totalItems = products.length;
+      totalPages = Math.ceil(totalItems / limit);
+    }
+
+    console.log(
+      `Produtos obtidos: ${products.length} de um total de ${totalItems}`,
+    );
     return { products, totalItems, totalPages, currentPage: page };
   }
 
