@@ -14,6 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CategoryController = void 0;
 const common_1 = require("@nestjs/common");
+const platform_express_1 = require("@nestjs/platform-express");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 const create_category_dto_1 = require("../dto/create-category.dto");
 const category_service_1 = require("./category.service");
@@ -27,11 +28,12 @@ let CategoryController = class CategoryController {
     async findOne(id) {
         return this.categoryService.findOne(id);
     }
-    async create(categoryData) {
-        return this.categoryService.create(categoryData);
+    async create(categoryData, image) {
+        return this.categoryService.create(categoryData, image);
     }
-    async update(id, updateData) {
-        return this.categoryService.update(id, updateData);
+    async update(id, updateData, image) {
+        console.log('Imagem recebida:', image);
+        return this.categoryService.update(id, updateData, image);
     }
     async remove(id) {
         await this.categoryService.remove(id);
@@ -59,18 +61,22 @@ __decorate([
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Post)(),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('image')),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_category_dto_1.CreateCategoryDto]),
+    __metadata("design:paramtypes", [create_category_dto_1.CreateCategoryDto, Object]),
     __metadata("design:returntype", Promise)
 ], CategoryController.prototype, "create", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Patch)(':id'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('image')),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:paramtypes", [Number, Object, Object]),
     __metadata("design:returntype", Promise)
 ], CategoryController.prototype, "update", null);
 __decorate([

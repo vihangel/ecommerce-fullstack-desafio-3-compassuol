@@ -2,7 +2,7 @@
     {
         "name": "Syltherine",
         "sku": "S002",
-        "category_id": 45,
+        "category_id": 49,
         "description": "Stylish cafe chair",
         "large_description": "Comfortable and elegant, perfect for cafes.",
         "price": 2500000,
@@ -64,7 +64,7 @@
     {
         "name": "Pingky",
         "sku": "S008",
-        "category_id": 45,
+        "category_id": 49,
         "description": "Cute bed set",
         "large_description": "Soft and cozy bed set that adds warmth to your bedroom decor.",
         "price": 7000000,

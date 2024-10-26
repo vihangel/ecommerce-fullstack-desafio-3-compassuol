@@ -24,7 +24,13 @@ __decorate([
     __metadata("design:type", String)
 ], Category.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => product_model_1.Product, (product) => product.category),
+    (0, typeorm_1.Column)({ type: 'text', nullable: true }),
+    __metadata("design:type", String)
+], Category.prototype, "image_url", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => product_model_1.Product, (product) => product.category, {
+        cascade: ['remove'],
+    }),
     __metadata("design:type", Array)
 ], Category.prototype, "products", void 0);
 exports.Category = Category = __decorate([
