@@ -28,7 +28,9 @@ const ProductSection: React.FC<ProductSectionProps> = ({
             <ProductCard key={product.id} product={product} />
           ))}
         </ProductGrid>
-        {showMore && <ShowMoreButton>Show More</ShowMoreButton>}
+        {showMore && (
+          <ShowMoreButton onClick={showMore}>Show More</ShowMoreButton>
+        )}
       </ContentWrapper>
     </ProductsSection>
   );

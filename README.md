@@ -203,10 +203,10 @@ O frontend do projeto é desenvolvido em React e Styled Components, criando uma 
 
 ### Cenário: Definição de filtros
 
-- [ ] Dado que o usuário entrou na tela Shop
-- [ ] E que o usuário quer visualizar produtos específicos
-- [ ] Quando o usuário clicar em “Filter”
-- [ ] Então o sistema deverá exibir uma listagem de filtros que deverão poder ser
+- [x] Dado que o usuário entrou na tela Shop
+- [x] E que o usuário quer visualizar produtos específicos
+- [x] Quando o usuário clicar em “Filter”
+- [x] Então o sistema deverá exibir uma listagem de filtros que deverão poder ser
       selecionados como um checkbox.
 
 ### Cenário: Limite de resultado
@@ -298,10 +298,10 @@ O frontend do projeto é desenvolvido em React e Styled Components, criando uma 
 
 ### Cenário: Hover nos produtos
 
-- [ ] Dado que o usuário está visualizando os produtos relacionados
-- [ ] E que o sistema está funcionando corretamente
-- [ ] Quando o usuário passar o mouse por cima de um produto
-- [ ] Então o sistema deverá exibir uma espécie de hover sobre o produto em questão.
+- [x] Dado que o usuário está visualizando os produtos relacionados
+- [x] E que o sistema está funcionando corretamente
+- [x] Quando o usuário passar o mouse por cima de um produto
+- [x] Então o sistema deverá exibir uma espécie de hover sobre o produto em questão.
 
 ### Cenário: Detalhes do Produto
 
@@ -312,15 +312,15 @@ O frontend do projeto é desenvolvido em React e Styled Components, criando uma 
 
 ### Cenário: Exibição de mais produtos
 
-- [ ] Dado que o usuário visualizou os primeiros produtos relacionados exibidos
-- [ ] E que o usuário quer continuar visualizando mais produtos
-- [ ] Quando o usuário clicar em “Show More”
-- [ ] Então o sistema deverá exibir nesta mesma página uma segunda fileira de produtos
+- [x] Dado que o usuário visualizou os primeiros produtos relacionados exibidos
+- [x] E que o usuário quer continuar visualizando mais produtos
+- [x] Quando o usuário clicar em “Show More”
+- [x] Então o sistema deverá exibir nesta mesma página uma segunda fileira de produtos
 
 ### Cenário: Exibição de mais produtos 2x
 
-- [ ] Dado que o usuário já clicou em "Show More” 1x
-- [ ] E que o usuário quer continuar visualizando mais produtos
-- [ ] Quando o usuário clicar em “Show More” novamente
-- [ ] Então o sistema deverá redirecionar para a tela “Shop” exibindo produtos somente
+- [x] Dado que o usuário já clicou em "Show More” 1x
+- [x] E que o usuário quer continuar visualizando mais produtos
+- [x] Quando o usuário clicar em “Show More” novamente
+- [x] Então o sistema deverá redirecionar para a tela “Shop” exibindo produtos somente
       produtos relacionados, ou seja, da mesma categoria.

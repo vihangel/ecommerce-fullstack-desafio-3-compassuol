@@ -1,6 +1,7 @@
 /** @format */
 
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import HeroImage from "../../assets/images/hero.png";
 import Container from "../../components/shared/Container";
@@ -13,9 +14,10 @@ import FeatureSection from "./components/FeatureSection";
 import { Product } from "../../models/Product";
 const HomePage: React.FC = () => {
   const useMockData = false;
-
+  const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(!useMockData);
+  const [showMoreClicks, setShowMoreClicks] = useState<number>(0);
 
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
@@ -50,6 +52,29 @@ const HomePage: React.FC = () => {
     loadProducts();
   }, [useMockData]);
 
+  const handleShowMore = async () => {
+    setShowMoreClicks((prev) => prev + 1);
+
+    if (showMoreClicks === 1) {
+      navigate("/shop");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const fetchedMoreProducts = await fetchProducts(undefined, 4, 3);
+      setProducts((prevProducts) => [
+        ...prevProducts,
+        ...fetchedMoreProducts.products,
+      ]);
+    } catch (error) {
+      console.error("Erro ao buscar mais produtos:", error);
+      setError("Erro ao carregar mais produtos. Tente novamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Main>
       <HeroSection>
@@ -77,9 +102,7 @@ const HomePage: React.FC = () => {
         <ProductSection
           title="Our Products"
           products={products}
-          showMore={() => {
-            console.log("Show more products...");
-          }}
+          showMore={products.length < 8 ? undefined : handleShowMore}
         />
       )}
       <FeatureSection />

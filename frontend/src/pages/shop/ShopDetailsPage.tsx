@@ -10,6 +10,8 @@ import { Product } from "../../models/Product";
 import { fetchProducts } from "../../services/ProductServices";
 import { theme } from "../../styles/theme";
 import ProductSection from "../home/components/ProductSection";
+
+import { useNavigate } from "react-router-dom";
 import TopBarDetails from "./components/TopBarDetails";
 
 const ProductDetailsPage: React.FC = () => {
@@ -20,6 +22,8 @@ const ProductDetailsPage: React.FC = () => {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [mainImage, setMainImage] = useState<string | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const navigate = useNavigate();
+  const [showMoreClicks, setShowMoreClicks] = useState<number>(0);
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -75,8 +79,14 @@ const ProductDetailsPage: React.FC = () => {
     setSelectedColor(colorImageUrl || null);
   };
 
-  // Função para mostrar mais produtos relacionados
   const handleShowMore = async () => {
+    setShowMoreClicks((prev) => prev + 1);
+
+    if (showMoreClicks === 1) {
+      navigate(`/shop?category_id=${product.category?.id}`);
+      return;
+    }
+
     try {
       const moreProductsResponse = await fetchProducts(product.category?.id, 4);
       const moreProducts = moreProductsResponse.products;
@@ -96,7 +106,6 @@ const ProductDetailsPage: React.FC = () => {
       console.error("Erro ao buscar mais produtos:", error);
     }
   };
-
   return (
     <Main>
       <TopBarDetails productName={product.name} />
@@ -210,7 +219,7 @@ const ProductDetailsPage: React.FC = () => {
       <ProductSection
         title="Related Products"
         products={relatedProducts}
-        showMore={handleShowMore}
+        showMore={relatedProducts.length < 5 ? undefined : handleShowMore}
       />
     </Main>
   );
