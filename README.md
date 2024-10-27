@@ -187,10 +187,10 @@ O frontend do projeto é desenvolvido em React e Styled Components, criando uma 
 
 ### Cenário: Exibição de mais produtos
 
-- [ ] Dado que o usuário visualizou os produtos da tela inicial
-- [ ] E que o sistema está funcionando corretamente
-- [ ] Quando o usuário clicar em “Show More”
-- [ ] Então o sistema deverá redirecionar para uma página de listagens de produtos.
+- [x] Dado que o usuário visualizou os produtos da tela inicial
+- [x] E que o sistema está funcionando corretamente
+- [x] Quando o usuário clicar em “Show More”
+- [x] Então o sistema deverá redirecionar para uma página de listagens de produtos.
 
 ## Critérios de Aceite (Tela Shop)
 
