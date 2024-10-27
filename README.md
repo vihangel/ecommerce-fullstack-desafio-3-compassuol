@@ -151,10 +151,10 @@ O frontend do projeto é desenvolvido em React e Styled Components, criando uma 
 
 ### Cenário: Acesso as categorias
 
-- [ ] Dado que o usuário visualizou as categorias
-- [ ] E que o sistema está funcionando corretamente
-- [ ] Quando o usuário clicar em uma opção de categoria
-- [ ] Então o sistema deverá redirecionar para uma página de listagem de produtos da
+- [x] Dado que o usuário visualizou as categorias
+- [x] E que o sistema está funcionando corretamente
+- [x] Quando o usuário clicar em uma opção de categoria
+- [x] Então o sistema deverá redirecionar para uma página de listagem de produtos da
       categoria referente.
 
 ### Cenário: Visualização de produtos
@@ -217,10 +217,10 @@ O frontend do projeto é desenvolvido em React e Styled Components, criando uma 
 
 ### Cenário: Definição de ordem
 
-- [ ] Dado que o usuário entrou na tela Shop
-- [ ] E que o usuário quer ordernar os produtos
-- [ ] Quando o usuário clicar no campo definido para “Short by”
-- [ ] Então o sistema deverá exibir duas opções de listagem, “Crescente” ou “Descrescente”.
+- [x] Dado que o usuário entrou na tela Shop
+- [x] E que o usuário quer ordernar os produtos
+- [x] Quando o usuário clicar no campo definido para “Short by”
+- [x] Então o sistema deverá exibir duas opções de listagem, “Crescente” ou “Descrescente”.
 
 ### Cenário: Indicação de desconto ou itens novos
 

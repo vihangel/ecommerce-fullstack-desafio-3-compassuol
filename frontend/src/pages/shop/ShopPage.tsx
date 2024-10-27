@@ -1,6 +1,7 @@
 /** @format */
 
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { Product } from "../../models/Product";
 import { fetchProducts } from "../../services/ProductServices";
@@ -21,6 +22,11 @@ const ShopPage: React.FC = () => {
   const [totalPages, setTotalPages] = useState<number>(0);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [sort, setSort] = useState<"ASC" | "DESC" | undefined>(undefined);
+  const location = useLocation();
+
+  /// categoria pela url
+  const params = new URLSearchParams(location.search);
+  const categoryId = params.get("category_id");
 
   // Função para buscar produtos, acionada sempre que currentPage, itemsPerPage ou filtros mudarem
   const loadProducts = async () => {
@@ -40,7 +46,7 @@ const ShopPage: React.FC = () => {
         }, 2000);
       } else {
         const fetchedProductsResponse = await fetchProducts(
-          undefined,
+          categoryId ? parseInt(categoryId) : undefined,
           itemsPerPage,
           currentPage,
           sort
@@ -70,7 +76,7 @@ const ShopPage: React.FC = () => {
   // Atualizar os produtos sempre que currentPage, itemsPerPage ou filtros mudarem
   useEffect(() => {
     loadProducts();
-  }, [currentPage, itemsPerPage, sort]);
+  }, [currentPage, itemsPerPage, sort, categoryId]);
 
   // Função para alterar o número de itens por página
   const handleItemsPerPageChange = (value: number) => {

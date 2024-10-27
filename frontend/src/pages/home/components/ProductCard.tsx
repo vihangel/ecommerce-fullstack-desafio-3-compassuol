@@ -100,7 +100,7 @@ const Card = styled.div`
   transition: transform 0.3s ease-in-out;
   min-width: 17.5rem; // 280px to rem
   &:hover {
-    transform: translateY(-0.625rem); // 10px to rem
+    transform: translateY(-0.625rem);
   }
 
   &:hover ${Overlay} {

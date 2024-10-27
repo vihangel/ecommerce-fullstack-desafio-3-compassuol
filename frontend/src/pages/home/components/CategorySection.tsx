@@ -1,6 +1,7 @@
 /** @format */
 
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Container from "../../../components/shared/Container";
 import { Category } from "../../../models/Category";
@@ -11,7 +12,7 @@ const CategorySection: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -60,7 +61,10 @@ const CategorySection: React.FC = () => {
           <Title>Browse The Range</Title>
           <CategoryGrid>
             {categories.map((category) => (
-              <CategoryCard key={category.id}>
+              <CategoryCard
+                key={category.id}
+                onClick={() => navigate(`/shop?category_id=${category.id}`)}
+              >
                 <CategoryImage
                   src={
                     category.image_url || "/assets/images/default_category.png"
@@ -114,6 +118,13 @@ const CategoryCard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: transform 0.3s ease-in-out;
+
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+    transform: translateY(-0.625rem);
+  }
 `;
 
 const CategoryImage = styled.img`
