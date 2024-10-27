@@ -17,7 +17,8 @@ interface ShopControlsProps {
   itemsPerPage: number;
   setItemsPerPage: (value: number) => void;
   handlePageChange: (page: number) => void;
-  handleSortChange: (value: "ASC" | "DESC" | "default") => void; // Adicionando a função para mudar a ordenação
+  handleSortChange: (value: "ASC" | "DESC" | "default") => void;
+  handleFilterToggle: () => void;
 }
 
 const ShopControls: React.FC<ShopControlsProps> = ({
@@ -27,13 +28,14 @@ const ShopControls: React.FC<ShopControlsProps> = ({
   itemsPerPage,
   setItemsPerPage,
   handleSortChange,
+  handleFilterToggle,
 }) => {
   return (
     <ControlsSection>
       <Container>
         <ControlsWrapper>
           <LeftControls>
-            <FilterButton>
+            <FilterButton onClick={handleFilterToggle}>
               <img src={FilterIcon} alt="Filter" />
               Filter
             </FilterButton>

@@ -8,6 +8,7 @@ import { fetchProducts } from "../../services/ProductServices";
 import { theme } from "../../styles/theme";
 import FeatureSection from "../home/components/FeatureSection";
 import ProductSection from "../home/components/ProductSection";
+import FilterPanel from "./components/FilterPainel";
 import Pagination from "./components/Pagination";
 import ShopControls from "./components/ShopControls";
 import ShopHero from "./components/ShopHero";
@@ -22,6 +23,10 @@ const ShopPage: React.FC = () => {
   const [totalPages, setTotalPages] = useState<number>(0);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [sort, setSort] = useState<"ASC" | "DESC" | undefined>(undefined);
+  const [filters, setFilters] = useState<{ [key: string]: string[] | boolean }>(
+    {}
+  );
+  const [showFilterPanel, setShowFilterPanel] = useState<boolean>(false);
   const location = useLocation();
 
   /// categoria pela url
@@ -49,7 +54,10 @@ const ShopPage: React.FC = () => {
           categoryId ? parseInt(categoryId) : undefined,
           itemsPerPage,
           currentPage,
-          sort
+          sort,
+          undefined,
+          false,
+          filters
         );
 
         // Atualizar os valores de totalItems e totalPages conforme a resposta do backend
@@ -76,12 +84,24 @@ const ShopPage: React.FC = () => {
   // Atualizar os produtos sempre que currentPage, itemsPerPage ou filtros mudarem
   useEffect(() => {
     loadProducts();
-  }, [currentPage, itemsPerPage, sort, categoryId]);
+  }, [currentPage, itemsPerPage, sort, categoryId, filters]);
 
   // Função para alterar o número de itens por página
   const handleItemsPerPageChange = (value: number) => {
     setItemsPerPage(value);
     setCurrentPage(1); // Reseta a página para 1 ao alterar o número de itens por página
+  };
+
+  const handleFilterToggle = () => {
+    setShowFilterPanel(!showFilterPanel);
+  };
+
+  const applyFilters = (selectedFilters: {
+    [key: string]: string[] | boolean;
+  }) => {
+    setFilters(selectedFilters);
+    setCurrentPage(1);
+    setShowFilterPanel(false);
   };
 
   // Função para alterar a página atual
@@ -112,7 +132,11 @@ const ShopPage: React.FC = () => {
         setItemsPerPage={handleItemsPerPageChange}
         handlePageChange={handlePageChange}
         handleSortChange={handleSortChange}
-      />
+        handleFilterToggle={handleFilterToggle}
+      />{" "}
+      {showFilterPanel && (
+        <FilterPanel applyFilters={applyFilters} currentFilters={filters} />
+      )}
       {loading ? (
         <LoadingMessage>Carregando produtos...</LoadingMessage>
       ) : error ? (

@@ -26,7 +26,7 @@ let ProductService = class ProductService {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }
-    async findAll(filters, page = 1, limit = 10, sort, limitCompleted = false) {
+    async findAll(filters, page = 1, limit = 10, sort, limitCompleted = false, discount = false) {
         const query = this.productRepository
             .createQueryBuilder('product')
             .leftJoinAndSelect('product.category', 'category');
@@ -40,6 +40,10 @@ let ProductService = class ProductService {
             if (filters.is_new !== undefined) {
                 console.log(`Filtrando por produtos novos: ${filters.is_new}`);
                 query.andWhere('product.is_new = :isNew', { isNew: filters.is_new });
+            }
+            if (discount) {
+                console.log('Filtrando por produtos em desconto');
+                query.andWhere('(product.discount_percent IS NOT NULL OR product.discount_price IS NOT NULL)');
             }
             if (filters.price !== undefined) {
                 console.log(`Filtrando por preço até: ${filters.price}`);

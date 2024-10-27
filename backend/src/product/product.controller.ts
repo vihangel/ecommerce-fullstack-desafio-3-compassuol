@@ -31,6 +31,7 @@ export class ProductController {
     @Query('limit') limit: string = '10',
     @Query('sort') sort?: 'ASC' | 'DESC',
     @Query('limit_completed') limitCompleted?: boolean,
+    @Query('discount') discount?: boolean,
   ) {
     const filters: Partial<Product> = {};
 
@@ -56,6 +57,7 @@ export class ProductController {
       limitNumber,
       sort,
       limitCompleted,
+      discount,
     );
   }
 

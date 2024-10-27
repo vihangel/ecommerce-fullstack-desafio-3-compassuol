@@ -25,6 +25,7 @@ export class ProductService {
     limit: number = 10,
     sort?: 'ASC' | 'DESC',
     limitCompleted = false,
+    discount = false,
   ): Promise<{
     products: Product[];
     totalItems: number;
@@ -50,6 +51,14 @@ export class ProductService {
       if (filters.is_new !== undefined) {
         console.log(`Filtrando por produtos novos: ${filters.is_new}`);
         query.andWhere('product.is_new = :isNew', { isNew: filters.is_new });
+      }
+
+      // Aplicando filtro de desconto, se houver
+      if (discount) {
+        console.log('Filtrando por produtos em desconto');
+        query.andWhere(
+          '(product.discount_percent IS NOT NULL OR product.discount_price IS NOT NULL)',
+        );
       }
 
       // 3. Filtro de Preço (se houver)

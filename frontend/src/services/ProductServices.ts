@@ -16,7 +16,8 @@ export const fetchProducts = async (
   page?: number,
   sort?: "ASC" | "DESC",
   isNew?: boolean,
-  limitCompleted?: boolean
+  limitCompleted?: boolean,
+  filters?: { [key: string]: string[] | boolean }
 ): Promise<FetchProductsResponse> => {
   try {
     let url = `http://localhost:3000/products?`;
@@ -45,6 +46,26 @@ export const fetchProducts = async (
       url += `limit_completed=${limitCompleted}&`;
     }
 
+    if (filters) {
+      Object.keys(filters).forEach((key) => {
+        const filterValue = filters[key];
+
+        if (key === "category_id" && Array.isArray(filterValue)) {
+          // Se o filtro for categoria, adicione a lista de categorias no formato correto
+          filterValue.forEach((categoryId) => {
+            url += `category_id=${categoryId}&`;
+          });
+        } else if (Array.isArray(filterValue)) {
+          // Para outros filtros que são arrays
+          filterValue.forEach((value) => {
+            url += `${key}=${value}&`;
+          });
+        } else if (typeof filterValue === "boolean") {
+          // Para filtros booleanos
+          url += `${key}=${filterValue}&`;
+        }
+      });
+    }
     // Removendo o '&' extra no final da URL, caso exista
     url = url.slice(0, -1);
 
