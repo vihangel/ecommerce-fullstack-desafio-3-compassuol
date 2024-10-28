@@ -10,6 +10,11 @@ export class Category {
   @Column({ length: 100 })
   name: string;
 
-  @OneToMany(() => Product, (product) => product.category)
+  @Column({ type: 'text', nullable: true })
+  image_url: string;
+
+  @OneToMany(() => Product, (product) => product.category, {
+    cascade: ['remove'],
+  })
   products: Product[];
 }

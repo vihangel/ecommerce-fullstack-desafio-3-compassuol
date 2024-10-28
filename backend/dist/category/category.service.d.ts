@@ -8,8 +8,8 @@ export declare class CategoryService {
     constructor(categoryRepository: Repository<Category>, productRepository: Repository<Product>);
     findAll(): Promise<Category[]>;
     findOne(id: number): Promise<Category>;
-    create(categoryData: CreateCategoryDto): Promise<Category>;
-    update(id: number, updateData: Partial<CreateCategoryDto>): Promise<Category>;
+    create(categoryData: CreateCategoryDto, image?: Express.Multer.File): Promise<Category>;
+    update(id: number, updateData: Partial<CreateCategoryDto>, image?: Express.Multer.File): Promise<Category>;
     remove(id: number): Promise<void>;
     removeAll(): Promise<void>;
 }

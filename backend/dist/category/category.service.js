@@ -15,6 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CategoryService = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
+const cloudinary_1 = require("cloudinary");
+const fs_1 = require("fs");
+const stream_1 = require("stream");
 const typeorm_2 = require("typeorm");
 const category_model_1 = require("../models/category.model");
 const product_model_1 = require("../models/product.model");
@@ -33,23 +36,82 @@ let CategoryService = class CategoryService {
         }
         return category;
     }
-    async create(categoryData) {
+    async create(categoryData, image) {
         const existingCategory = await this.categoryRepository.findOne({
             where: { name: categoryData.name },
         });
         if (existingCategory) {
             throw new common_1.ConflictException(`Category with name "${categoryData.name}" already exists`);
         }
-        const newCategory = this.categoryRepository.create(categoryData);
+        let imageUrl;
+        if (image) {
+            console.log('Tentando fazer upload da imagem usando buffer');
+            try {
+                imageUrl = await new Promise((resolve, reject) => {
+                    const uploadStream = cloudinary_1.v2.uploader.upload_stream({
+                        folder: 'categories',
+                    }, (error, result) => {
+                        if (error) {
+                            console.error('Erro ao salvar a imagem no Cloudinary:', error.message);
+                            return reject(new Error('Erro ao salvar a imagem no Cloudinary: ' + error.message));
+                        }
+                        if (result) {
+                            console.log('Upload bem-sucedido, URL da imagem:', result.secure_url);
+                            resolve(result.secure_url);
+                        }
+                    });
+                    const stream = new stream_1.Stream.PassThrough();
+                    stream.end(image.buffer);
+                    stream.pipe(uploadStream);
+                });
+            }
+            catch (error) {
+                throw new Error('Erro ao salvar a imagem no Cloudinary: ' + error.message);
+            }
+        }
+        const newCategory = this.categoryRepository.create({
+            ...categoryData,
+            image_url: imageUrl || categoryData.image_url || null,
+        });
         return this.categoryRepository.save(newCategory);
     }
-    async update(id, updateData) {
+    async update(id, updateData, image) {
         const category = await this.findOne(id);
+        if (image) {
+            try {
+                console.log('Caminho da imagem:', image.path);
+                const result = await cloudinary_1.v2.uploader.upload(image.path, {
+                    folder: 'categories',
+                    public_id: `category_${category.id}`,
+                });
+                updateData.image_url = result.secure_url;
+                await fs_1.promises.unlink(image.path);
+            }
+            catch (error) {
+                console.error('Erro ao salvar a imagem no Cloudinary:', error.message);
+                throw new Error('Erro ao salvar a imagem no Cloudinary: ' + error.message);
+            }
+        }
         const updatedCategory = Object.assign(category, updateData);
         return this.categoryRepository.save(updatedCategory);
     }
     async remove(id) {
         const category = await this.findOne(id);
+        if (!category) {
+            throw new common_1.NotFoundException(`Category with ID ${id} not found.`);
+        }
+        if (category.image_url) {
+            try {
+                const publicId = category.image_url.split('/').pop()?.split('.')[0];
+                if (publicId) {
+                    await cloudinary_1.v2.uploader.destroy(`categories/${publicId}`);
+                }
+            }
+            catch (error) {
+                throw new Error('Erro ao remover a imagem do Cloudinary: ' + error.message);
+            }
+        }
+        await this.productRepository.delete({ category: { id } });
         await this.categoryRepository.remove(category);
     }
     async removeAll() {

@@ -7,8 +7,11 @@ import {
   Param,
   Patch,
   Post,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateCategoryDto } from '../dto/create-category.dto';
 import { CategoryService } from './category.service';
@@ -17,36 +20,38 @@ import { CategoryService } from './category.service';
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
-  // Rota pública para listar todas as categorias
   @Get()
   async findAll() {
     return this.categoryService.findAll();
   }
 
-  // Rota pública para buscar uma categoria pelo ID
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.categoryService.findOne(id);
   }
 
-  // Rota protegida para criar uma nova categoria
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Body() categoryData: CreateCategoryDto) {
-    return this.categoryService.create(categoryData);
+  @UseInterceptors(FileInterceptor('image'))
+  async create(
+    @Body() categoryData: CreateCategoryDto,
+    @UploadedFile() image?: Express.Multer.File,
+  ) {
+    return this.categoryService.create(categoryData, image);
   }
 
-  // Rota protegida para atualizar uma categoria
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
+  @UseInterceptors(FileInterceptor('image'))
   async update(
     @Param('id') id: number,
     @Body() updateData: Partial<CreateCategoryDto>,
+    @UploadedFile() image?: Express.Multer.File,
   ) {
-    return this.categoryService.update(id, updateData);
+    console.log('Imagem recebida:', image);
+    return this.categoryService.update(id, updateData, image);
   }
 
-  // Rota protegida para remover uma categoria
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: number) {
@@ -54,7 +59,6 @@ export class CategoryController {
     return { message: `Category with ID ${id} has been deleted` };
   }
 
-  // Rota protegida para remover todas as categorias
   @UseGuards(JwtAuthGuard)
   @Delete()
   async removeAll() {

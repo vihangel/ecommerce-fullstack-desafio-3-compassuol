@@ -17,6 +17,8 @@ interface ShopControlsProps {
   itemsPerPage: number;
   setItemsPerPage: (value: number) => void;
   handlePageChange: (page: number) => void;
+  handleSortChange: (value: "ASC" | "DESC" | "default") => void;
+  handleFilterToggle: () => void;
 }
 
 const ShopControls: React.FC<ShopControlsProps> = ({
@@ -25,15 +27,15 @@ const ShopControls: React.FC<ShopControlsProps> = ({
   totalItems,
   itemsPerPage,
   setItemsPerPage,
+  handleSortChange,
+  handleFilterToggle,
 }) => {
   return (
     <ControlsSection>
-      {" "}
       <Container>
-        {" "}
         <ControlsWrapper>
           <LeftControls>
-            <FilterButton>
+            <FilterButton onClick={handleFilterToggle}>
               <img src={FilterIcon} alt="Filter" />
               Filter
             </FilterButton>
@@ -60,10 +62,16 @@ const ShopControls: React.FC<ShopControlsProps> = ({
               onChange={(e) => setItemsPerPage(parseInt(e.target.value))}
             />
             <SortByLabel>Sort by</SortByLabel>
-            <SortBySelect>
+            <SortBySelect
+              onChange={(e) =>
+                handleSortChange(e.target.value as "ASC" | "DESC" | "default")
+              }
+            >
               <option value="default">Default</option>
+              <option value="ASC">Price: Low to High</option>
+              <option value="DESC">Price: High to Low</option>
             </SortBySelect>
-          </RightControls>{" "}
+          </RightControls>
         </ControlsWrapper>
       </Container>
     </ControlsSection>

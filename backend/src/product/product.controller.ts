@@ -24,11 +24,41 @@ export class ProductController {
 
   @Get()
   async findAll(
-    @Query() filters: Partial<Product>,
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
+    @Query('category_id') categoryId?: string,
+    @Query('is_new') isNew?: string,
+    @Query('price') price?: string,
+    @Query('page') page: string = '1',
+    @Query('limit') limit: string = '10',
+    @Query('sort') sort?: 'ASC' | 'DESC',
+    @Query('limit_completed') limitCompleted?: boolean,
+    @Query('discount') discount?: boolean,
   ) {
-    return this.productService.findAll(filters, page, limit);
+    const filters: Partial<Product> = {};
+
+    // Parseia e converte os valores de `query` para os tipos apropriados
+    if (categoryId) {
+      filters.category = { id: parseInt(categoryId, 10) } as any;
+    }
+
+    if (isNew !== undefined) {
+      filters.is_new = isNew.toLowerCase() === 'true';
+    }
+
+    if (price !== undefined) {
+      filters.price = parseFloat(price);
+    }
+
+    const pageNumber = parseInt(page, 10);
+    const limitNumber = parseInt(limit, 10);
+
+    return this.productService.findAll(
+      filters,
+      pageNumber,
+      limitNumber,
+      sort,
+      limitCompleted,
+      discount,
+    );
   }
 
   @Get(':id')

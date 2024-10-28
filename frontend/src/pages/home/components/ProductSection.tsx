@@ -1,36 +1,40 @@
 /** @format */
 
 // src/components/ProductSection.tsx
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
-
-import { Product } from '../../../models/Product';
-import { theme } from '../../../styles/theme';
-import ProductCard from './ProductCard';
-
+import { Product } from "../../../models/Product";
+import { theme } from "../../../styles/theme";
+import ProductCard from "./ProductCard";
 
 interface ProductSectionProps {
-  title: string; 
-  products: Product[]; 
+  title: string;
+  products: Product[];
+  showMore?: () => void;
 }
 
-const ProductSection: React.FC<ProductSectionProps> = ({ title, products }) => {
+const ProductSection: React.FC<ProductSectionProps> = ({
+  title,
+  products,
+  showMore,
+}) => {
   return (
     <ProductsSection>
-
-        <ContentWrapper>
-          <Title>{title}</Title>
-          <ProductGrid>
+      <ContentWrapper>
+        <Title>{title}</Title>
+        <ProductGrid>
           {products.map((product) => (
-              <ProductCard key={product.id} product={product} /> 
-            ))}
-          </ProductGrid>
-          <ShowMoreButton>Show More</ShowMoreButton>
-        </ContentWrapper>
-     
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </ProductGrid>
+        {showMore && (
+          <ShowMoreButton onClick={showMore}>Show More</ShowMoreButton>
+        )}
+      </ContentWrapper>
     </ProductsSection>
-  );};
+  );
+};
 export default ProductSection;
 // Styled Components
 const ProductsSection = styled.section`
@@ -38,11 +42,11 @@ const ProductsSection = styled.section`
   padding: 4rem 2rem;
 `;
 const ContentWrapper = styled.div`
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-gap: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
 `;
 
 const Title = styled.h2`
@@ -62,7 +66,7 @@ const ProductGrid = styled.div`
     margin: 0 auto;
   }
   @media (max-width: 80rem) {
-    grid-template-columns:1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
   }
 
   @media (max-width: 60rem) {
@@ -83,7 +87,7 @@ const ShowMoreButton = styled.button`
   font-weight: 600; // Semibold
   border: 1px solid ${theme.colors.primary};
   padding: 0.75rem 4.5rem;
-  
+
   cursor: pointer;
   display: block;
   margin-left: auto;
