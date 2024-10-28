@@ -1,5 +1,39 @@
 [
     {
+        "name": "Teste",
+        "sku": "S009",
+        "category_id": 46,
+        "description": "Minimalist flower pot",
+        "large_description": "Modern minimalist flower pot, ideal for home or office use.",
+        "price": 500000,
+        "discount_price": 450000,
+        "discount_percent": 10,
+        "is_new": true,
+        "sizes": [
+            "Small",
+            "Medium",
+            "Large"
+        ],
+        "colors": [
+            {
+                "name": "White",
+                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_97_white.png"
+            },
+            {
+                "name": "Black",
+                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_97_terracotta.png"
+            }
+        ],
+        "tags": [
+            "Flower Pot",
+            "Minimalist",
+            "Home Decor"
+        ],
+        "additional_information": "Drainage hole included, suitable for indoor and outdoor plants.",
+        "cover_image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_99.png",
+        "gallery_images": []
+    },
+    {
         "name": "Syltherine",
         "sku": "S002",
         "category_id": 49,
@@ -38,7 +72,7 @@
     {
         "name": "Leviosa",
         "sku": "S003",
-        "category_id": 45,
+        "category_id": 56,
         "description": "Luxury big sofa",
         "large_description": "Perfect for the entire family with premium comfort.",
         "price": 7000000,
@@ -51,12 +85,10 @@
         ],
         "colors": [
             {
-                "name": "Gray",
-                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282498/products/product_91_gray.png"
+                "name": "Gray"
             },
             {
-                "name": "Beige",
-                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282498/products/product_91_beige.png"
+                "name": "Beige"
             }
         ],
         "tags": [
@@ -65,11 +97,8 @@
             "Luxury"
         ],
         "additional_information": "Includes 4 soft pillows, easy to clean fabric.",
-        "cover_image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282498/products/product_91.png",
-        "gallery_images": [
-            "https://res.cloudinary.com/degnvmueo/image/upload/v1729282498/products/product_91_front.png",
-            "https://res.cloudinary.com/degnvmueo/image/upload/v1729282498/products/product_91_closeup.png"
-        ]
+        "cover_image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282498/products/leviosa_yso5s9.png",
+        "gallery_images": []
     },
     {
         "name": "Lolito",
@@ -86,12 +115,11 @@
         ],
         "colors": [
             {
-                "name": "Brown",
-                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282499/products/product_92_brown.png"
+                "name": "Brown"
             },
             {
                 "name": "Green",
-                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282499/products/product_92_green.png"
+                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282499/products/lolito_vhwj7h.pn"
             }
         ],
         "tags": [
@@ -100,11 +128,8 @@
             "Durable"
         ],
         "additional_information": "Weather-resistant material, 1-year warranty included.",
-        "cover_image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282499/products/product_92.png",
-        "gallery_images": [
-            "https://res.cloudinary.com/degnvmueo/image/upload/v1729282499/products/product_92_top.png",
-            "https://res.cloudinary.com/degnvmueo/image/upload/v1729282499/products/product_92_seat.png"
-        ]
+        "cover_image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282499/products/lolito_vhwj7h.png",
+        "gallery_images": []
     },
     {
         "name": "Muggo",
@@ -241,6 +266,40 @@
             "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_96_side.png",
             "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_96_closeup.png"
         ]
+    },
+    {
+        "name": "Teste",
+        "sku": "S009",
+        "category_id": 46,
+        "description": "Minimalist flower pot",
+        "large_description": "Modern minimalist flower pot, ideal for home or office use.",
+        "price": 500000,
+        "discount_price": 450000,
+        "discount_percent": 10,
+        "is_new": true,
+        "sizes": [
+            "Small",
+            "Medium",
+            "Large"
+        ],
+        "colors": [
+            {
+                "name": "White",
+                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_97_white.png"
+            },
+            {
+                "name": "Black",
+                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_97_terracotta.png"
+            }
+        ],
+        "tags": [
+            "Flower Pot",
+            "Minimalist",
+            "Home Decor"
+        ],
+        "additional_information": "Drainage hole included, suitable for indoor and outdoor plants.",
+        "cover_image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_99.png",
+        "gallery_images": []
     },
     {
         "name": "Potty",
