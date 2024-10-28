@@ -3,6 +3,7 @@
 // src/components/Footer.tsx
 import axios from "axios";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { theme } from "../styles/theme";
 
@@ -49,16 +50,16 @@ const Footer: React.FC = () => {
         </FooterSection>
         <FooterLinks>
           <ColumnTitle>Links</ColumnTitle>
-          <LinkItem>Home</LinkItem>
-          <LinkItem>Shop</LinkItem>
-          <LinkItem>About</LinkItem>
-          <LinkItem>Contact</LinkItem>
+          <LinkItem to="/">Home</LinkItem>
+          <LinkItem to="/shop">Shop</LinkItem>
+          <LinkItem to="#">About</LinkItem>
+          <LinkItem to="#">Contact</LinkItem>
         </FooterLinks>
         <FooterHelp>
           <ColumnTitle>Help</ColumnTitle>
-          <LinkItem>Payment Options</LinkItem>
-          <LinkItem>Returns</LinkItem>
-          <LinkItem>Privacy Policies</LinkItem>
+          <LinkItem to="#">Payment Options</LinkItem>
+          <LinkItem to="#">Returns</LinkItem>
+          <LinkItem to="#">Privacy Policies</LinkItem>
         </FooterHelp>
         <FooterNewsletter>
           <ColumnTitle>Newsletter</ColumnTitle>
@@ -153,7 +154,7 @@ const ColumnTitle = styled.h3`
   margin-bottom: 1rem;
 `;
 
-const LinkItem = styled.p`
+const LinkItem = styled(Link)`
   font-size: 16px;
   font-weight: 500; // Medium
   color: ${theme.colors.text};

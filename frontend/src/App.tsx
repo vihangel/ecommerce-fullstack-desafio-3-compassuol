@@ -1,8 +1,14 @@
 /** @format */
 
 // src/App.tsx
-import React from "react";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import React, { useEffect } from "react";
+import {
+  Route,
+  BrowserRouter as Router,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import AppBar from "./components/AppBar";
 import Footer from "./components/Footer";
@@ -19,15 +25,70 @@ const App: React.FC = () => {
       <GlobalStyles />
       <Router>
         <AppBar />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/shop" element={<ShopPage />} />
-          <Route path="/shop/:id" element={<ShopDetailsPage />} />
-          <Route path="*" element={<ErrorPage />} />
-        </Routes>
-        <Footer></Footer>
+        <AnimatedRoutes />
+        <Footer />
       </Router>
     </ThemeProvider>
+  );
+};
+
+const AnimatedRoutes: React.FC = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0); // Sempre rola para o topo ao mudar de rota
+  }, [location]);
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route
+          path="/"
+          element={
+            <PageWrapper>
+              <HomePage />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/shop"
+          element={
+            <PageWrapper>
+              <ShopPage />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/shop/:id"
+          element={
+            <PageWrapper>
+              <ShopDetailsPage />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <PageWrapper>
+              <ErrorPage />
+            </PageWrapper>
+          }
+        />
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
+const PageWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -50 }}
+      transition={{ duration: 0.5 }}
+    >
+      {children}
+    </motion.div>
   );
 };
 
