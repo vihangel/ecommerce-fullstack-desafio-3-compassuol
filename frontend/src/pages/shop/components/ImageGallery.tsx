@@ -105,18 +105,36 @@ export default ImageGallery;
 const ImageGalleryDiv = styled.div`
   display: flex;
   gap: 31px;
+
+  @media (max-width: 1050px) {
+    flex-direction: column-reverse;
+  }
 `;
 const MainImage = styled.img`
-  width: 423px;
+  width: 100%;
+  max-width: 423px;
+
   height: 500px;
   object-fit: contain;
   border-radius: 10px;
   background: ${theme.colors.primaryLight};
+
+  @media (max-width: 750px) {
+    height: auto;
+  }
 `;
 const ThumbnailGallery = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  flex-wrap: wrap;
+
+  @media (max-width: 1050px) {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 0.5rem;
+    padding-bottom: 1rem;
+  }
 `;
 const Thumbnail = styled.img<{ selected?: boolean }>`
   width: 76px;
