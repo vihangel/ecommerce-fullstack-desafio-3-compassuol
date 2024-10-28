@@ -1,39 +1,5 @@
 [
     {
-        "name": "Teste",
-        "sku": "S009",
-        "category_id": 46,
-        "description": "Minimalist flower pot",
-        "large_description": "Modern minimalist flower pot, ideal for home or office use.",
-        "price": 500000,
-        "discount_price": 450000,
-        "discount_percent": 10,
-        "is_new": true,
-        "sizes": [
-            "Small",
-            "Medium",
-            "Large"
-        ],
-        "colors": [
-            {
-                "name": "White",
-                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_97_white.png"
-            },
-            {
-                "name": "Black",
-                "image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_97_terracotta.png"
-            }
-        ],
-        "tags": [
-            "Flower Pot",
-            "Minimalist",
-            "Home Decor"
-        ],
-        "additional_information": "Drainage hole included, suitable for indoor and outdoor plants.",
-        "cover_image_url": "https://res.cloudinary.com/degnvmueo/image/upload/v1729282503/products/product_99.png",
-        "gallery_images": []
-    },
-    {
         "name": "Syltherine",
         "sku": "S002",
         "category_id": 49,
