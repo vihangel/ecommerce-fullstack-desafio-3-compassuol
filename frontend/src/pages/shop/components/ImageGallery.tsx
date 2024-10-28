@@ -61,6 +61,16 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
             }}
           />
         ))}
+
+        <Thumbnail
+          key={`gallery-last`}
+          src={product.cover_image_url}
+          alt={`${product.name} - Imagem principal`}
+          onClick={() => handleImageSelect(product.cover_image_url ?? "")}
+          onError={(e) => {
+            e.currentTarget.src = defaultProductImage;
+          }}
+        />
       </ThumbnailGallery>
       <MainImage
         src={mainImage || defaultProductImage}
