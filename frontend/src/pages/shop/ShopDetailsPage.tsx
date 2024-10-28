@@ -19,9 +19,14 @@ const ProductDetailsPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
-  const [mainImage, setMainImage] = useState<string | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+  const [quantity, setQuantity] = useState<number>(1);
   const [showMoreClicks, setShowMoreClicks] = useState<number>(0);
+  const [activeTab, setActiveTab] = useState<"description" | "info">(
+    "description"
+  );
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,7 +39,6 @@ const ProductDetailsPage: React.FC = () => {
         const productData = response.data;
 
         setProduct(productData);
-        setMainImage(productData.cover_image_url);
 
         const relatedProductsResponse = await fetchProducts(
           productData.category.id,
@@ -72,12 +76,6 @@ const ProductDetailsPage: React.FC = () => {
     return <ErrorMessage>Produto não encontrado.</ErrorMessage>;
   }
 
-  // Função para alterar a imagem principal ao selecionar uma cor
-  const handleColorSelect = (colorImageUrl: string | undefined) => {
-    setMainImage(colorImageUrl || product.cover_image_url || null);
-    setSelectedColor(colorImageUrl || null);
-  };
-
   const handleShowMore = async () => {
     setShowMoreClicks((prev) => prev + 1);
 
@@ -96,17 +94,7 @@ const ProductDetailsPage: React.FC = () => {
       );
       const moreProducts = moreProductsResponse.products;
 
-      console.log(
-        "Mais produtos category:",
-        moreProducts.map((p) => p.name + " - " + p.category?.name)
-      );
-
       setRelatedProducts((prevProducts) => [...prevProducts, ...moreProducts]);
-
-      console.log(
-        "Mais produtos category:",
-        moreProducts.map((p) => p.name + " - " + p.category?.name)
-      );
     } catch (error) {
       console.error("Erro ao buscar mais produtos:", error);
     }
@@ -117,7 +105,10 @@ const ProductDetailsPage: React.FC = () => {
       <TopBarDetails productName={product.name} />
       <Container>
         <ProductWrapper>
-          <ImageGallery product={product}></ImageGallery>
+          <ImageGallery
+            product={product}
+            selectedColor={selectedColor || undefined}
+          />
           <ProductInfo>
             <h2>{product.name}</h2>
             <Price>
@@ -139,7 +130,13 @@ const ProductDetailsPage: React.FC = () => {
                 <span>Tamanho</span>
                 <div>
                   {product.sizes?.map((size, index) => (
-                    <SizeOption key={index}>{size}</SizeOption>
+                    <SizeOption
+                      key={index}
+                      onClick={() => setSelectedSize(size)}
+                      selected={selectedSize === size}
+                    >
+                      {size}
+                    </SizeOption>
                   ))}
                 </div>
               </SizeSelector>
@@ -149,8 +146,16 @@ const ProductDetailsPage: React.FC = () => {
                   {product.colors?.map((color, index) => (
                     <ColorOption
                       key={index}
-                      style={{ background: color.name }}
-                      onClick={() => handleColorSelect(color.image_url)}
+                      style={{
+                        background: color.name,
+                        border:
+                          selectedColor === color.name
+                            ? "2px solid black"
+                            : "none",
+                      }}
+                      onClick={() => {
+                        setSelectedColor(color.name);
+                      }}
                     />
                   ))}
                 </div>
@@ -159,9 +164,15 @@ const ProductDetailsPage: React.FC = () => {
 
             <ActionButtons>
               <QuantitySelector>
-                <button>-</button>
-                <span>1</span>
-                <button>+</button>
+                <button
+                  onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+                >
+                  -
+                </button>
+                <span>{quantity}</span>
+                <button onClick={() => setQuantity((prev) => prev + 1)}>
+                  +
+                </button>
               </QuantitySelector>
               <AddToCartButton>Add To Cart</AddToCartButton>
               <CompareButton>+ Compare</CompareButton>
@@ -171,7 +182,6 @@ const ProductDetailsPage: React.FC = () => {
               <p>SKU: {product.sku}</p>
               <p>Categoria: {product.category?.name}</p>
               <p>Tags: {product.tags?.join(", ") || "N/A"}</p>
-              {/* Component to share the product */}
             </ProductMeta>
           </ProductInfo>
         </ProductWrapper>
@@ -180,12 +190,22 @@ const ProductDetailsPage: React.FC = () => {
       <Container>
         <DescriptionSection>
           <Tab>
-            <TabItem active>Descrição</TabItem>
-            <TabItem>Informação Adicional</TabItem>
+            <TabItem
+              active={activeTab === "description"}
+              onClick={() => setActiveTab("description")}
+            >
+              Descrição
+            </TabItem>
+            <TabItem
+              active={activeTab === "info"}
+              onClick={() => setActiveTab("info")}
+            >
+              Informação Adicional
+            </TabItem>
           </Tab>
           <DescriptionContent>
-            <p>{product.description}</p>
-            <p>{product.additional_information}</p>
+            {activeTab === "description" && <p>{product.description}</p>}
+            {activeTab === "info" && <p>{product.additional_information}</p>}
           </DescriptionContent>
         </DescriptionSection>
       </Container>
@@ -197,7 +217,9 @@ const ProductDetailsPage: React.FC = () => {
     </Main>
   );
 };
+
 export default ProductDetailsPage;
+
 // Função auxiliar para formatar o preço
 const formatPrice = (price: string): string => {
   return parseInt(price, 10).toLocaleString("id-ID", {
@@ -304,11 +326,14 @@ const SizeSelector = styled.div`
 `;
 
 // If selected must be primary font color white else primaryLight and font color black
-const SizeOption = styled.button`
+const SizeOption = styled.button<{ selected: boolean }>`
   margin-right: 16px;
   padding: 10px 17px;
   border-radius: 5px;
-  background: ${theme.colors.primaryLight};
+  background: ${({ selected }) =>
+    selected ? theme.colors.primary : theme.colors.primaryLight};
+  color: ${({ selected }) =>
+    selected ? theme.colors.white : theme.colors.black};
   cursor: pointer;
   border: none;
 `;

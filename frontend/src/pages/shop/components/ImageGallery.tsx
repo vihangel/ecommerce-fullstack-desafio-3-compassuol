@@ -7,27 +7,39 @@ import { theme } from "../../../styles/theme";
 
 interface ImageGalleryProps {
   product: Product;
-  initialImage?: string;
+  selectedColor?: string;
   onImageChange?: (imageUrl: string) => void;
 }
 
 const ImageGallery: React.FC<ImageGalleryProps> = ({
   product,
-  initialImage,
+  selectedColor,
   onImageChange,
 }) => {
   const [mainImage, setMainImage] = useState<string>(
-    initialImage || product.cover_image_url || defaultProductImage
+    selectedColor
+      ? (product.colors ?? []).find((color) => color.name === selectedColor)
+          ?.image_url ||
+          product.cover_image_url ||
+          defaultProductImage
+      : product.cover_image_url || defaultProductImage
   );
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   useEffect(() => {
-    setMainImage(
-      initialImage || product.cover_image_url || defaultProductImage
+    const colorImage = selectedColor
+      ? (product.colors ?? []).find((color) => color.name === selectedColor)
+          ?.image_url
+      : null;
+    setMainImage(colorImage || product.cover_image_url || defaultProductImage);
+    setSelectedImage(
+      colorImage || product.cover_image_url || defaultProductImage
     );
-  }, [product, initialImage]);
+  }, [product, selectedColor]);
 
   const handleImageSelect = (imageUrl: string) => {
     setMainImage(imageUrl);
+    setSelectedImage(imageUrl);
     if (onImageChange) {
       onImageChange(imageUrl);
     }
@@ -46,6 +58,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
             onError={(e) => {
               e.currentTarget.src = defaultProductImage;
             }}
+            selected={selectedImage === imageUrl}
           />
         ))}
 
@@ -59,17 +72,21 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
             onError={(e) => {
               e.currentTarget.src = defaultProductImage;
             }}
+            selected={selectedImage === color.image_url}
           />
         ))}
 
         <Thumbnail
-          key={`gallery-last`}
-          src={product.cover_image_url}
-          alt={`${product.name} - Imagem principal`}
-          onClick={() => handleImageSelect(product.cover_image_url ?? "")}
+          key={`color-last`}
+          src={product.cover_image_url || defaultProductImage}
+          alt={`${product.name} - Capa`}
+          onClick={() =>
+            handleImageSelect(product.cover_image_url ?? defaultProductImage)
+          }
           onError={(e) => {
             e.currentTarget.src = defaultProductImage;
           }}
+          selected={selectedImage === product.cover_image_url}
         />
       </ThumbnailGallery>
       <MainImage
@@ -101,7 +118,7 @@ const ThumbnailGallery = styled.div`
   flex-direction: column;
   gap: 0.5rem;
 `;
-const Thumbnail = styled.img`
+const Thumbnail = styled.img<{ selected?: boolean }>`
   width: 76px;
   height: 80px;
   cursor: pointer;
