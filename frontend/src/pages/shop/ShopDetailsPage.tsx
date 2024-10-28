@@ -2,16 +2,15 @@
 
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import defaultProductImage from "../../assets/images/default_product.png";
+
 import Container from "../../components/shared/Container";
 import { Product } from "../../models/Product";
 import { fetchProducts } from "../../services/ProductServices";
 import { theme } from "../../styles/theme";
 import ProductSection from "../home/components/ProductSection";
-
-import { useNavigate } from "react-router-dom";
+import ImageGallery from "./components/ImageGallery";
 import TopBarDetails from "./components/TopBarDetails";
 
 const ProductDetailsPage: React.FC = () => {
@@ -22,8 +21,8 @@ const ProductDetailsPage: React.FC = () => {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [mainImage, setMainImage] = useState<string | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
-  const navigate = useNavigate();
   const [showMoreClicks, setShowMoreClicks] = useState<number>(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -86,9 +85,15 @@ const ProductDetailsPage: React.FC = () => {
       navigate(`/shop?category_id=${product.category?.id}`);
       return;
     }
-
     try {
-      const moreProductsResponse = await fetchProducts(product.category?.id, 4);
+      const moreProductsResponse = await fetchProducts(
+        undefined,
+        4,
+        2,
+        undefined,
+        undefined,
+        true
+      );
       const moreProducts = moreProductsResponse.products;
 
       console.log(
@@ -106,45 +111,13 @@ const ProductDetailsPage: React.FC = () => {
       console.error("Erro ao buscar mais produtos:", error);
     }
   };
+
   return (
     <Main>
       <TopBarDetails productName={product.name} />
       <Container>
         <ProductWrapper>
-          <ImageGallery>
-            <ThumbnailGallery>
-              {/* Listagem da galeria de imagens e imagens associadas às cores */}
-              {product.gallery_images?.map((imageUrl, index) => (
-                <Thumbnail
-                  key={index}
-                  src={imageUrl || undefined}
-                  alt={`${product.name} - Imagem ${index + 1}`}
-                  onClick={() => setMainImage(imageUrl)}
-                  onError={(e) => {
-                    e.currentTarget.src = defaultProductImage;
-                  }}
-                />
-              ))}
-              {product.colors?.map((color, index) => (
-                <Thumbnail
-                  key={index}
-                  src={color.image_url || undefined}
-                  alt={`${product.name} - Cor ${color.name}`}
-                  onClick={() => handleColorSelect(color.image_url)}
-                  onError={(e) => {
-                    e.currentTarget.src = defaultProductImage;
-                  }}
-                />
-              ))}
-            </ThumbnailGallery>
-            <MainImage
-              src={mainImage || undefined}
-              alt={product.name}
-              onError={(e) => {
-                e.currentTarget.src = defaultProductImage;
-              }}
-            />
-          </ImageGallery>
+          <ImageGallery product={product}></ImageGallery>
           <ProductInfo>
             <h2>{product.name}</h2>
             <Price>
@@ -219,7 +192,7 @@ const ProductDetailsPage: React.FC = () => {
       <ProductSection
         title="Related Products"
         products={relatedProducts}
-        showMore={relatedProducts.length < 5 ? undefined : handleShowMore}
+        showMore={handleShowMore}
       />
     </Main>
   );
@@ -263,33 +236,6 @@ const ProductWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-const ImageGallery = styled.div`
-  display: flex;
-  gap: 31px;
-`;
-const MainImage = styled.img`
-  width: 423px;
-  height: 500px;
-  object-fit: contain;
-  border-radius: 10px;
-  background: ${theme.colors.primaryLight};
-`;
-const ThumbnailGallery = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-`;
-const Thumbnail = styled.img`
-  width: 76px;
-  height: 80px;
-  cursor: pointer;
-  object-fit: cover;
-  border-radius: 10px;
-  background: ${theme.colors.primaryLight};
-  &:hover {
-    border-color: ${theme.colors.primary};
-  }
-`;
 const AddToCartButton = styled.button`
   padding: 17px 48px;
   background: transparent;
